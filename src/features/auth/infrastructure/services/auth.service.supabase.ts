@@ -1,11 +1,10 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "@config/supabase.js";
 import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
 import type { AuthToken } from "@features/auth/domain/services/auth.service.js";
 
 export class AuthServiceSupabase {
-  constructor(private readonly supabase: SupabaseClient) {}
   async signInWithApple(token: string): Promise<AuthToken> {
-    const { data, error } = await this.supabase.auth.signInWithIdToken({
+    const { data, error } = await supabase.auth.signInWithIdToken({
       provider: "apple",
       token: token,
     });

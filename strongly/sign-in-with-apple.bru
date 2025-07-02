@@ -1,0 +1,15 @@
+meta {
+  name: sign-in-with-apple
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/auth/sign-in-with-apple
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {}
+}
