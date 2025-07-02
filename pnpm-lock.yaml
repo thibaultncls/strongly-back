@@ -11,6 +11,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.14.4
         version: 1.14.4(hono@4.8.3)
+      dotenv:
+        specifier: ^17.0.1
+        version: 17.0.1
       hono:
         specifier: ^4.8.3
         version: 4.8.3
@@ -186,6 +189,10 @@ packages:
   '@types/node@20.19.2':
     resolution: {integrity: sha512-9pLGGwdzOUBDYi0GNjM97FIA+f92fqSke6joWeBjWXllfNxZBs7qeMF7tvtOIsbY45xkWkxrdwUfUf3MnQa9gA==}
 
+  dotenv@17.0.1:
+    resolution: {integrity: sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==}
+    engines: {node: '>=12'}
+
   esbuild@0.25.5:
     resolution: {integrity: sha512-P8OtKZRv/5J5hhz0cUAdu/cLuPIKXpQl1R9pZtvmHWQvrAUVd0UNIPT4IB4W3rNOqVO0rlqHmCIbSwxh/c9yUQ==}
     engines: {node: '>=18'}
@@ -303,6 +310,8 @@ snapshots:
   '@types/node@20.19.2':
     dependencies:
       undici-types: 6.21.0
+
+  dotenv@17.0.1: {}
 
   esbuild@0.25.5:
     optionalDependencies:

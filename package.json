@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "strongly_back",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.4",
+    "dotenv": "^17.0.1",
     "hono": "^4.8.3"
   },
   "devDependencies": {
