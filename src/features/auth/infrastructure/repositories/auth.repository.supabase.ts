@@ -1,5 +1,6 @@
 import { supabase } from "@config/supabase.js";
 import type { AuthRepository } from "@features/auth/domain/repositories/auth.repository.js";
+import { CreateError } from "@shared/errors/CreateError.js";
 
 export class AuthRepositorySupabase implements AuthRepository {
   async createUser(uuId: string, email?: string): Promise<void> {
@@ -11,7 +12,7 @@ export class AuthRepositorySupabase implements AuthRepository {
 
     if (error) {
       console.error(`Error creating user: ${error.message}`);
-      throw new Error(`Failed to create user with ID ${uuId}`);
+      throw new CreateError(`Failed to create user with UUID ${uuId}: ${error.message}`);
     }
   }
   async checkIfUserExistsByUuid(uuId: string): Promise<boolean> {

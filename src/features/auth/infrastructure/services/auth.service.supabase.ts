@@ -10,9 +10,7 @@ export class AuthServiceSupabase {
     });
 
     if (error) {
-      throw new SignInWithAppleError(
-        `Sign in with Apple failed: ${error.message}`
-      );
+      throw new SignInWithAppleError(`Sign in with Apple failed: ${error.message}`);
     }
 
     if (!data || !data.session) {
@@ -22,6 +20,7 @@ export class AuthServiceSupabase {
       accessToken: data.session.access_token,
       refreshToken: data.session.refresh_token,
       userId: data.session.user.id,
+      email: data.session.user.email,
     };
   }
 }

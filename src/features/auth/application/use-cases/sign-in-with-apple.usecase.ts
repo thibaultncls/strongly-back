@@ -1,12 +1,12 @@
 import { supabase } from "@config/supabase.js";
 import type { AuthRepository } from "@features/auth/domain/repositories/auth.repository.js";
-import type { AuthService } from "@features/auth/domain/services/auth.service.js";
+import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 
 export class SignInWithAppleUseCase {
   constructor(private readonly authService: AuthService, private readonly authRepository: AuthRepository) {}
 
-  async execute({ token }: { token?: string }) {
+  async execute({ token }: { token?: string }): Promise<AuthToken> {
     if (!token) {
       throw new InvalidArgumentsError("Token is required for signing in with Apple");
     }
@@ -14,6 +14,10 @@ export class SignInWithAppleUseCase {
     const authToken = await this.authService.signInWithApple(token);
 
     const isUserExists = await this.authRepository.checkIfUserExistsByUuid(authToken.userId);
+
+    if (!isUserExists) {
+      await this.authRepository.createUser(authToken.userId, authToken.email);
+    }
 
     return authToken;
   }
