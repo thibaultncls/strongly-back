@@ -8,10 +8,10 @@ import type { Context } from "hono";
 
 export async function signInWithApple(c: Context) {
   const { token } = await c.req.json();
+  console.log("Received token:", token);
 
   try {
     const userCase = container.get<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE);
-
     const authToken = await userCase.execute({ token });
 
     console.log("Auth token:", authToken);
@@ -23,6 +23,7 @@ export async function signInWithApple(c: Context) {
       email: authToken.email,
     });
   } catch (error: any) {
+    console.error("Error during sign-in with Apple:", error);
     if (error instanceof SignInWithAppleError) {
       return c.json({ error: error.message }, 400);
     } else if (error instanceof InvalidArgumentsError) {
