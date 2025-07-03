@@ -4,16 +4,16 @@ import type { AuthService } from "@features/auth/domain/services/auth.service.js
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 
 export class SignInWithAppleUseCase {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly authRepository: AuthRepository) {}
 
   async execute({ token }: { token?: string }) {
     if (!token) {
-      throw new InvalidArgumentsError(
-        "Token is required for signing in with Apple"
-      );
+      throw new InvalidArgumentsError("Token is required for signing in with Apple");
     }
 
     const authToken = await this.authService.signInWithApple(token);
+
+    const isUserExists = await this.authRepository.checkIfUserExistsByUuid(authToken.userId);
 
     return authToken;
   }
