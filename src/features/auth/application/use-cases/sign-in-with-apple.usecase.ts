@@ -12,6 +12,7 @@ export class SignInWithAppleUseCase {
         "Token is required for signing in with Apple"
       );
     }
+
     const authToken = await this.authService.signInWithApple(token);
 
     return authToken;

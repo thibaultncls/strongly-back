@@ -1,3 +1,3 @@
 export interface AuthRepository {
-  signInWithApple: () => Promise<string>;
+  checkIfUserExistsByUuid(uuId: string): Promise<boolean>;
 }

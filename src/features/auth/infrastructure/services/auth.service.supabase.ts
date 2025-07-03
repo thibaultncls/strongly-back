@@ -18,7 +18,6 @@ export class AuthServiceSupabase {
     if (!data || !data.session) {
       throw new SignInWithAppleError("No session data returned from Supabase");
     }
-
     return {
       accessToken: data.session.access_token,
       refreshToken: data.session.refresh_token,

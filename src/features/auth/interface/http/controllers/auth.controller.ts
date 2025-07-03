@@ -2,6 +2,7 @@ import { container } from "@config/inversify.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import { SignInWithAppleError } from "@features/auth/infrastructure/errors/sign-in-with-apple.error.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
+import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import type { Context } from "hono";
 
 export async function signInWithApple(c: Context) {
@@ -23,6 +24,8 @@ export async function signInWithApple(c: Context) {
     });
   } catch (error: any) {
     if (error instanceof SignInWithAppleError) {
+      return c.json({ error: error.message }, 400);
+    } else if (error instanceof InvalidArgumentsError) {
       return c.json({ error: error.message }, 400);
     } else {
       return c.json({ error: "An unexpected error occurred" }, 500);
