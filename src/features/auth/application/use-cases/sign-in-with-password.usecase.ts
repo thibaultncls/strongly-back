@@ -13,12 +13,12 @@ export class SignInWithPasswordUseCase {
     let authToken: AuthToken;
     const existingUser = await this.authRepository.checkIfUserExistsByEmail(email);
 
-    if (!existingUser) {
-      authToken = await this.authService.signUpWithEmailAndPassword(email, password);
-      await this.authRepository.createUser(authToken.userId, email);
-    } else {
-      authToken = await this.authService.signInWithEmailAndPassword(email, password);
-    }
+    // if (!existingUser) {
+    authToken = await this.authService.signUpWithEmailAndPassword(email, password);
+    //   await this.authRepository.createUser(authToken.userId, email);
+    // } else {
+    //   authToken = await this.authService.signInWithEmailAndPassword(email, password);
+    // }
 
     return authToken;
   }

@@ -26,6 +26,7 @@ export class AuthRepositorySupabase implements AuthRepository {
       throw new CreateError(`Failed to create user with UUID ${uuId}: ${error.message}`);
     }
   }
+
   async checkIfUserExistsByUuid(uuid: string): Promise<boolean> {
     const { data, error } = await supabase.from("user").select("*").eq("id", uuid).single();
 

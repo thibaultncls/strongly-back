@@ -16,7 +16,8 @@ export class AuthServiceSupabase implements AuthService {
     }
 
     if (!data || !data.session) {
-      throw new SignInWithPasswordError("No session data returned from Supabase");
+      console.error("No session data returned from Supabase", data);
+      throw new SignInWithPasswordError("No session data returned from Supabase ");
     }
 
     return {
@@ -38,6 +39,7 @@ export class AuthServiceSupabase implements AuthService {
     }
 
     if (!data || !data.session) {
+      console.error("No session data returned from Supabase", data);
       throw new SignInWithPasswordError("No session data returned from Supabase");
     }
 
