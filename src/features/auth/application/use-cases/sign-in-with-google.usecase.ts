@@ -5,12 +5,12 @@ import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 export class SignInWithGoogleUseCase {
   constructor(private readonly authService: AuthService, private readonly authRepository: AuthRepository) {}
 
-  async execute({ token, accessToken }: { token?: string; accessToken?: string }): Promise<AuthToken> {
-    if (!token || !accessToken) {
+  async execute({ token }: { token?: string }): Promise<AuthToken> {
+    if (!token) {
       throw new InvalidArgumentsError("Token is required for signing in with Google");
     }
 
-    const authToken = await this.authService.signInWithGoogle(token, accessToken);
+    const authToken = await this.authService.signInWithGoogle(token);
 
     const isUserExists = await this.authRepository.checkIfUserExistsByUuid(authToken.userId);
 

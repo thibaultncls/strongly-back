@@ -7,5 +7,5 @@ export interface AuthToken {
 
 export interface AuthService {
   signInWithApple(token: string): Promise<AuthToken>;
-  signInWithGoogle(token: string, accessToken: string): Promise<AuthToken>;
+  signInWithGoogle(token: string): Promise<AuthToken>;
 }

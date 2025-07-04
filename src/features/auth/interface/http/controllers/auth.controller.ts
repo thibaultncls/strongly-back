@@ -39,12 +39,12 @@ export async function signInWithApple(c: Context) {
 }
 
 export async function signInWithGoogle(c: Context) {
-  const { token, accessToken } = await c.req.json();
+  const { token } = await c.req.json();
   console.log("Received token:", token);
 
   try {
     const userCase = container.get<SignInWithGoogleUseCase>(TYPES.SIGN_IN_WITH_GOOGLE_USE_CASE);
-    const authToken = await userCase.execute({ token, accessToken });
+    const authToken = await userCase.execute({ token });
 
     console.log("Auth token:", authToken);
 

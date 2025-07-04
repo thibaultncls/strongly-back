@@ -4,7 +4,7 @@ import type { AuthService, AuthToken } from "@features/auth/domain/services/auth
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
 
 export class AuthServiceSupabase implements AuthService {
-  async signInWithGoogle(token: string, accessToken: string): Promise<AuthToken> {
+  async signInWithGoogle(token: string): Promise<AuthToken> {
     const { error, data } = await supabase.auth.signInWithIdToken({
       provider: "google",
       token: token,
