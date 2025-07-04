@@ -1,8 +1,10 @@
 import { container } from "@config/inversify.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import type { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
+import type { SignInWithPasswordUseCase } from "@features/auth/application/use-cases/sign-in-with-password.usecase.js";
 import { SignInWithAppleError } from "@features/auth/infrastructure/errors/sign-in-with-apple.error.js";
 import { SignInWithGoogleError } from "@features/auth/infrastructure/errors/sign-in-with-google.error.js";
+import { SignInWithPasswordError } from "@features/auth/infrastructure/errors/sign-in-with-password.error.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { CreateError } from "@shared/errors/CreateError.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
@@ -59,6 +61,34 @@ export async function signInWithGoogle(c: Context) {
     if (error instanceof SignInWithGoogleError) {
       return c.json({ error: error.message }, 400);
     } else if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    } else if (error instanceof CreateError) {
+      return c.json({ error: error.message }, 500);
+    } else {
+      return c.json({ error: "An unexpected error occurred" }, 500);
+    }
+  }
+}
+
+export async function signInWithEmailAndPassword(c: Context) {
+  const { email, password } = await c.req.json();
+  console.log("Received email and password:", email, password);
+
+  try {
+    const userCase = container.get<SignInWithPasswordUseCase>(TYPES.SIGN_IN_WITH_PASSWORD_USE_CASE);
+    const authToken = await userCase.execute({ email, password });
+
+    return c.json({
+      accessToken: authToken.accessToken,
+      refreshToken: authToken.refreshToken,
+      userId: authToken.userId,
+      email: authToken.email,
+    });
+  } catch (error: any) {
+    console.error("Error during sign-in with email and password:", error);
+    if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    } else if (error instanceof SignInWithPasswordError) {
       return c.json({ error: error.message }, 400);
     } else if (error instanceof CreateError) {
       return c.json({ error: error.message }, 500);

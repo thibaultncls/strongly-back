@@ -1,4 +1,5 @@
 export interface AuthRepository {
-  checkIfUserExistsByUuid(uuId: string): Promise<boolean>;
+  checkIfUserExistsByUuid(uuid: string): Promise<boolean>;
+  checkIfUserExistsByEmail(email: string): Promise<boolean>;
   createUser(uuId: string, email?: string): Promise<void>;
 }
