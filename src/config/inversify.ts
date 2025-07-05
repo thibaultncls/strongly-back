@@ -1,7 +1,7 @@
 import { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
-import { SignInWithPasswordUseCase } from "@features/auth/application/use-cases/sign-in-with-password.usecase.js";
+import { VerifyOtpUseCase } from "@features/auth/application/use-cases/verify-otp.usecase.js";
 import type { AuthRepository } from "@features/auth/domain/repositories/auth.repository.js";
 import type { AuthService } from "@features/auth/domain/services/auth.service.js";
 import { AuthRepositorySupabase } from "@features/auth/infrastructure/repositories/auth.repository.supabase.js";
@@ -22,19 +22,12 @@ container.bind<SignInWithGoogleUseCase>(TYPES.SIGN_IN_WITH_GOOGLE_USE_CASE).toDy
   return new SignInWithGoogleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
 });
 
-container.bind<SignInWithPasswordUseCase>(TYPES.SIGN_IN_WITH_PASSWORD_USE_CASE).toDynamicValue(() => {
-  return new SignInWithPasswordUseCase(
-    container.get<AuthService>(TYPES.AUTH_SERVICE),
-    container.get<AuthRepository>(TYPES.AUTH_REPOSITORY)
-  );
-});
-
 container.bind<SendOtpUseCase>(TYPES.SEND_OTP_USE_CASE).toDynamicValue(() => {
   return new SendOtpUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
 });
 
-// container.bind<VerifyOtpUseCase>(TYPES.VERIFY_OTP_USE_CASE).toDynamicValue(() => {
-//   return new VerifyOtpUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
-// });
+container.bind<VerifyOtpUseCase>(TYPES.VERIFY_OTP_USE_CASE).toDynamicValue(() => {
+  return new VerifyOtpUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
+});
 
 export { container };
