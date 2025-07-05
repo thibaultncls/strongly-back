@@ -1,9 +1,11 @@
+import { EmailError } from "../errors/email.error.js";
+
 export class Email {
   private readonly email: string;
 
   constructor(email: string) {
     if (!this.isValidEmail(email)) {
-      throw new Error("Invalid email format");
+      throw new EmailError("Invalid email format");
     }
     this.email = email.toLowerCase();
   }

@@ -5,4 +5,5 @@ export const ERROR_NAMES = {
   CREATE_ERROR: "CreateError",
   SIGN_IN_WITH_OTP_ERROR: "SignInWithOtpError",
   OTP_ERROR: "OtpError",
+  EMAIL_ERROR: "EmailError",
 } as const;
