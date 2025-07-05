@@ -31,3 +31,5 @@ lerna-debug.log*
 
 /src/generated/prisma
 .prettierrc
+strongly/sign-in-with-apple.bru
+strongly/sign-in-with-google.bru
