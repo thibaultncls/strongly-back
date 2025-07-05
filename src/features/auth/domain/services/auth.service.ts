@@ -1,3 +1,5 @@
+import type { User } from "../entities/user.entity.js";
+
 export interface AuthToken {
   accessToken: string;
   refreshToken: string;
@@ -8,8 +10,6 @@ export interface AuthToken {
 export interface AuthService {
   signInWithApple(token: string): Promise<AuthToken>;
   signInWithGoogle(token: string): Promise<AuthToken>;
-  signInWithEmailAndPassword(email: string, password: string): Promise<AuthToken>;
-  signUpWithEmailAndPassword(email: string, password: string): Promise<AuthToken>;
-  sendOtp(email: string): Promise<void>;
+  sendOtp(user: User): Promise<void>;
   verifyOtp(email: string, otp: string): Promise<AuthToken>;
 }

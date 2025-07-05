@@ -2,13 +2,14 @@ import { supabase } from "@config/supabase.js";
 import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
 import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
-import { SignInWithPasswordError } from "../errors/sign-in-with-password.error.js";
+import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 import { OtpError } from "../errors/otp.error.js";
+import type { User } from "@features/auth/domain/entities/user.entity.js";
 
 export class AuthServiceSupabase implements AuthService {
-  async sendOtp(email: string): Promise<void> {
+  async sendOtp(user: User): Promise<void> {
     const { error } = await supabase.auth.signInWithOtp({
-      email: email,
+      email: user.email.value,
     });
 
     if (error) {
@@ -17,45 +18,18 @@ export class AuthServiceSupabase implements AuthService {
   }
 
   async verifyOtp(email: string, otp: string): Promise<AuthToken> {
-    throw new Error("Method not implemented.");
-  }
-
-  async signUpWithEmailAndPassword(email: string, password: string): Promise<AuthToken> {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.verifyOtp({
       email: email,
-      password: password,
+      token: otp,
+      type: "email",
     });
 
     if (error) {
-      throw new SignInWithPasswordError(`Sign up with email and password failed: ${error.message}`);
+      throw new SignInWithOtpError(`Verify OTP failed: ${error.message}`);
     }
 
     if (!data || !data.session) {
-      console.error("No session data returned from Supabase", data);
-      throw new SignInWithPasswordError("No session data returned from Supabase ");
-    }
-
-    return {
-      accessToken: data.session.access_token,
-      refreshToken: data.session.refresh_token,
-      userId: data.session.user.id,
-      email: data.session.user.email,
-    };
-  }
-
-  async signInWithEmailAndPassword(email: string, password: string): Promise<AuthToken> {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) {
-      throw new SignInWithPasswordError(`Sign in with email and password failed: ${error.message}`);
-    }
-
-    if (!data || !data.session) {
-      console.error("No session data returned from Supabase", data);
-      throw new SignInWithPasswordError("No session data returned from Supabase");
+      throw new SignInWithOtpError("No session data returned from Supabase");
     }
 
     return {
