@@ -4,12 +4,13 @@ import type { AuthService, AuthToken } from "@features/auth/domain/services/auth
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
 import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 import { OtpError } from "../errors/otp.error.js";
-import type { User } from "@features/auth/domain/entities/user.entity.js";
+import type { Email } from "@features/auth/domain/value-object/email.vo.js";
+import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
 
 export class AuthServiceSupabase implements AuthService {
-  async sendOtp(user: User): Promise<void> {
+  async sendOtp(email: Email): Promise<void> {
     const { error } = await supabase.auth.signInWithOtp({
-      email: user.email.value,
+      email: email.value,
     });
 
     if (error) {
@@ -17,10 +18,10 @@ export class AuthServiceSupabase implements AuthService {
     }
   }
 
-  async verifyOtp(email: string, otp: string): Promise<AuthToken> {
+  async verifyOtp(email: Email, otp: OTP): Promise<AuthToken> {
     const { data, error } = await supabase.auth.verifyOtp({
-      email: email,
-      token: otp,
+      email: email.value,
+      token: otp.value,
       type: "email",
     });
 
