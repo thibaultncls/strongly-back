@@ -10,4 +10,6 @@ export interface AuthService {
   signInWithGoogle(token: string): Promise<AuthToken>;
   signInWithEmailAndPassword(email: string, password: string): Promise<AuthToken>;
   signUpWithEmailAndPassword(email: string, password: string): Promise<AuthToken>;
+  sendOtp(email: string): Promise<void>;
+  verifyOtp(email: string, otp: string): Promise<AuthToken>;
 }

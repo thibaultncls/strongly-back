@@ -4,4 +4,5 @@ export const ERROR_NAMES = {
   SIGN_IN_WITH_GOOGLE_ERROR: "SignInWithGoogleError",
   CREATE_ERROR: "CreateError",
   SIGN_IN_WITH_PASSWORD_ERROR: "SignInWithPasswordError",
+  OTP_ERROR: "OtpError",
 } as const;

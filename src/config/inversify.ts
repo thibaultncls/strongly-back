@@ -1,3 +1,4 @@
+import { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
 import { SignInWithPasswordUseCase } from "@features/auth/application/use-cases/sign-in-with-password.usecase.js";
@@ -27,5 +28,13 @@ container.bind<SignInWithPasswordUseCase>(TYPES.SIGN_IN_WITH_PASSWORD_USE_CASE).
     container.get<AuthRepository>(TYPES.AUTH_REPOSITORY)
   );
 });
+
+container.bind<SendOtpUseCase>(TYPES.SEND_OTP_USE_CASE).toDynamicValue(() => {
+  return new SendOtpUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
+});
+
+// container.bind<VerifyOtpUseCase>(TYPES.VERIFY_OTP_USE_CASE).toDynamicValue(() => {
+//   return new VerifyOtpUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
+// });
 
 export { container };

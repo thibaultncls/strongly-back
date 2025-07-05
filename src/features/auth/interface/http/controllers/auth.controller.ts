@@ -1,7 +1,9 @@
 import { container } from "@config/inversify.js";
+import type { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import type { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
 import type { SignInWithPasswordUseCase } from "@features/auth/application/use-cases/sign-in-with-password.usecase.js";
+import { OtpError } from "@features/auth/infrastructure/errors/otp.error.js";
 import { SignInWithAppleError } from "@features/auth/infrastructure/errors/sign-in-with-apple.error.js";
 import { SignInWithGoogleError } from "@features/auth/infrastructure/errors/sign-in-with-google.error.js";
 import { SignInWithPasswordError } from "@features/auth/infrastructure/errors/sign-in-with-password.error.js";
@@ -91,6 +93,26 @@ export async function signInWithEmailAndPassword(c: Context) {
     } else if (error instanceof SignInWithPasswordError) {
       return c.json({ error: error.message }, 400);
     } else if (error instanceof CreateError) {
+      return c.json({ error: error.message }, 500);
+    } else {
+      return c.json({ error: "An unexpected error occurred" }, 500);
+    }
+  }
+}
+
+export async function sendOtp(c: Context) {
+  const { email } = await c.req.json();
+  console.log("Received email for OTP:", email);
+
+  try {
+    const sendOtpUseCase = container.get<SendOtpUseCase>(TYPES.SEND_OTP_USE_CASE);
+    await sendOtpUseCase.execute(email);
+    return c.json({ message: "OTP sent successfully" });
+  } catch (error: any) {
+    console.error("Error sending OTP:", error);
+    if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    } else if (error instanceof OtpError) {
       return c.json({ error: error.message }, 500);
     } else {
       return c.json({ error: "An unexpected error occurred" }, 500);

@@ -3,8 +3,23 @@ import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
 import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
 import { SignInWithPasswordError } from "../errors/sign-in-with-password.error.js";
+import { OtpError } from "../errors/otp.error.js";
 
 export class AuthServiceSupabase implements AuthService {
+  async sendOtp(email: string): Promise<void> {
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email,
+    });
+
+    if (error) {
+      throw new OtpError(`Send OTP failed: ${error.message}`);
+    }
+  }
+
+  async verifyOtp(email: string, otp: string): Promise<AuthToken> {
+    throw new Error("Method not implemented.");
+  }
+
   async signUpWithEmailAndPassword(email: string, password: string): Promise<AuthToken> {
     const { data, error } = await supabase.auth.signUp({
       email: email,
