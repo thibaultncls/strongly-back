@@ -3,17 +3,6 @@ import type { AuthRepository } from "@features/auth/domain/repositories/auth.rep
 import { CreateError } from "@shared/errors/CreateError.js";
 
 export class AuthRepositorySupabase implements AuthRepository {
-  async checkIfUserExistsByEmail(email: string): Promise<boolean> {
-    const { data, error } = await supabase.from("user").select("*").eq("email", email).single();
-
-    if (error) {
-      console.error(`Error checking user existence by email: ${error.message}`);
-      return false;
-    }
-
-    return !!data;
-  }
-
   async createUser(uuId: string, email?: string): Promise<void> {
     const { error } = await supabase.from("user").insert({
       id: uuId,
