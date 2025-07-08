@@ -4,7 +4,7 @@ import type { TokenService, UserToken } from "@shared/services/token.service.js"
 export class VerifyTokenUseCase {
   constructor(private readonly tokenService: TokenService) {}
 
-  async execute(token: string): Promise<UserToken> {
+  async execute(token: string | undefined): Promise<UserToken> {
     if (!token) {
       throw TokenError.tokenNotFound();
     }

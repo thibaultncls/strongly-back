@@ -2,11 +2,14 @@ import auth from "@features/auth/interface/http/routes/auth.route.js";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 
-const app = new Hono();
+type Variables = {
+  user: {
+    id: string;
+    email: string | null;
+  };
+};
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
+const app = new Hono<{ Variables: Variables }>();
 
 app.route("/auth", auth);
 

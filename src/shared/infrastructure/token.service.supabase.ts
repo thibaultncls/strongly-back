@@ -19,6 +19,7 @@ export class TokenServiceSupabase implements TokenService {
     console.log("Token verified successfully for user:", data.user.id);
     return {
       id: data.user.id,
+      email: data.user.email,
     };
   }
 }

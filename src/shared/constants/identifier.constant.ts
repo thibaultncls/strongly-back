@@ -5,4 +5,6 @@ export const TYPES = {
   SIGN_IN_WITH_GOOGLE_USE_CASE: Symbol.for("SignInWithGoogleUseCase"),
   SEND_OTP_USE_CASE: Symbol.for("SendOtpUseCase"),
   VERIFY_OTP_USE_CASE: Symbol.for("VerifyOtpUseCase"),
+  VERIFY_TOKEN_USE_CASE: Symbol.for("VerifyTokenUseCase"),
+  TOKEN_SERVICE: Symbol.for("TokenService"),
 };
