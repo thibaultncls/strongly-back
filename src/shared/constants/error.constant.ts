@@ -7,4 +7,5 @@ export const ERROR_NAMES = {
   OTP_ERROR: "OtpError",
   EMAIL_ERROR: "EmailError",
   TOKEN_ERROR: "TokenError",
+  REFRESH_TOKEN_ERROR: "RefreshTokenError",
 } as const;

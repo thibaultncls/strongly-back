@@ -1,3 +1,4 @@
+import { RefreshTokenUseCase } from "@features/auth/application/use-cases/refresh-token.usecase.js";
 import { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
@@ -36,6 +37,10 @@ container.bind<VerifyOtpUseCase>(TYPES.VERIFY_OTP_USE_CASE).toDynamicValue(() =>
 
 container.bind<VerifyTokenUseCase>(TYPES.VERIFY_TOKEN_USE_CASE).toDynamicValue(() => {
   return new VerifyTokenUseCase(container.get<TokenService>(TYPES.TOKEN_SERVICE));
+});
+
+container.bind<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE).toDynamicValue(() => {
+  return new RefreshTokenUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
 });
 
 export { container };

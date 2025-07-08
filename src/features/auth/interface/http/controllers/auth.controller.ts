@@ -1,10 +1,12 @@
 import { container } from "@config/inversify.js";
+import type { RefreshTokenUseCase } from "@features/auth/application/use-cases/refresh-token.usecase.js";
 import type { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
 import type { SignInWithGoogleUseCase } from "@features/auth/application/use-cases/sign-in-with-google.usecase.js";
 import type { VerifyOtpUseCase } from "@features/auth/application/use-cases/verify-otp.usecase.js";
 import { EmailError } from "@features/auth/domain/errors/email.error.js";
 import { OtpError } from "@features/auth/infrastructure/errors/otp.error.js";
+import { RefreshTokenError } from "@features/auth/infrastructure/errors/refresh-token.error.js";
 import { SignInWithAppleError } from "@features/auth/infrastructure/errors/sign-in-with-apple.error.js";
 import { SignInWithGoogleError } from "@features/auth/infrastructure/errors/sign-in-with-google.error.js";
 import { SignInWithOtpError } from "@features/auth/infrastructure/errors/sign-in-with-otp.error.js";
@@ -115,6 +117,31 @@ export async function verifyOtp(c: Context) {
     } else if (error instanceof InvalidArgumentsError || error instanceof EmailError || error instanceof OtpError) {
       return c.json({ error: error.message }, 400);
     } else if (error instanceof CreateError) {
+      return c.json({ error: error.message }, 500);
+    } else {
+      return c.json({ error: "An unexpected error occurred" }, 500);
+    }
+  }
+}
+
+export async function refreshToken(c: Context) {
+  const { refreshToken } = await c.req.json();
+
+  try {
+    const useCase = container.get<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE);
+    const authToken = await useCase.execute({ refreshToken });
+
+    return c.json({
+      accessToken: authToken.accessToken,
+      refreshToken: authToken.refreshToken,
+      userId: authToken.userId,
+      email: authToken.email,
+    });
+  } catch (error: any) {
+    console.error("Error refreshing token:", error);
+    if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    } else if (error instanceof RefreshTokenError) {
       return c.json({ error: error.message }, 500);
     } else {
       return c.json({ error: "An unexpected error occurred" }, 500);

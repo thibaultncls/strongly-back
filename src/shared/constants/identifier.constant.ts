@@ -7,4 +7,5 @@ export const TYPES = {
   VERIFY_OTP_USE_CASE: Symbol.for("VerifyOtpUseCase"),
   VERIFY_TOKEN_USE_CASE: Symbol.for("VerifyTokenUseCase"),
   TOKEN_SERVICE: Symbol.for("TokenService"),
+  REFRESH_TOKEN_USE_CASE: Symbol.for("RefreshTokenUseCase"),
 };

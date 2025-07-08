@@ -6,8 +6,30 @@ import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 import { OtpError } from "../errors/otp.error.js";
 import type { Email } from "@features/auth/domain/value-object/email.vo.js";
 import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
+import { RefreshTokenError } from "../errors/refresh-token.error.js";
 
 export class AuthServiceSupabase implements AuthService {
+  async refreshToken(refreshToken: string): Promise<AuthToken> {
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token: refreshToken,
+    });
+
+    if (error) {
+      throw new RefreshTokenError(`Refresh token failed: ${error.message}`);
+    }
+
+    if (!data || !data.session) {
+      throw new RefreshTokenError("No session data returned from Supabase");
+    }
+
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
+      userId: data.session.user.id,
+      email: data.session.user.email,
+    };
+  }
+
   async sendOtp(email: Email): Promise<void> {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.value,
