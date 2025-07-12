@@ -8,4 +8,5 @@ export const ERROR_NAMES = {
   EMAIL_ERROR: "EmailError",
   TOKEN_ERROR: "TokenError",
   REFRESH_TOKEN_ERROR: "RefreshTokenError",
+  REQUEST_ERROR: "RequestError",
 } as const;

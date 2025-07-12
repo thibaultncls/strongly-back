@@ -8,6 +8,20 @@ export interface WorkoutTemplate {
   }[];
 }
 
+export interface WorkoutTemplateUpdate {
+  workout_id: string;
+  workout_update: string; // ISO 8601 timestamp
+  exercises: {
+    exercise_id: string;
+    exercise_update: string; // ISO 8601 timestamp
+    sets: {
+      set_id: string;
+      set_update: string; // ISO 8601 timestamp
+    }[];
+  }[];
+}
+
 export interface DashboardRepository {
-  getWorkoutTemplates(userId: string): Promise<any[]>;
+  getTemplateUpdates(userId: string): Promise<WorkoutTemplateUpdate[]>;
+  getWorkoutTemplates(userId: string): Promise<WorkoutTemplate[]>;
 }
