@@ -11,8 +11,9 @@ export const authMiddleware = createMiddleware(async (c: Context, next: Function
 
     const useCase = container.get<VerifyTokenUseCase>(TYPES.VERIFY_TOKEN_USE_CASE);
     const userToken = await useCase.execute(token);
+    console.log(`Authenticated user ID: ${userToken.id}, Email: ${userToken.email}`);
 
-    c.set("user", userToken);
+    c.set("user", { id: userToken.id, email: userToken.email });
     await next();
   } catch (error: any) {
     if (error instanceof TokenError) {

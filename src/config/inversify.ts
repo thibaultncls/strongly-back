@@ -7,6 +7,9 @@ import type { AuthRepository } from "@features/auth/domain/repositories/auth.rep
 import type { AuthService } from "@features/auth/domain/services/auth.service.js";
 import { AuthRepositorySupabase } from "@features/auth/infrastructure/repositories/auth.repository.supabase.js";
 import { AuthServiceSupabase } from "@features/auth/infrastructure/services/auth.service.supabase.js";
+import { GetWorkoutsTemplateUpdateUseCase } from "@features/dashboard/application/use-case/get-workouts-template-update.usecase.js";
+import type { DashboardRepository } from "@features/dashboard/domain/repositories/dashboard.repository.js";
+import { DashboardRepositorySupabase } from "@features/dashboard/infrastructure/repositories/dashboard.repository.supabase.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { TokenServiceSupabase } from "@shared/infrastructure/token.service.supabase.js";
@@ -18,6 +21,7 @@ const container = new Container();
 container.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthServiceSupabase);
 container.bind<AuthRepository>(TYPES.AUTH_REPOSITORY).to(AuthRepositorySupabase);
 container.bind<TokenService>(TYPES.TOKEN_SERVICE).to(TokenServiceSupabase);
+container.bind<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY).to(DashboardRepositorySupabase);
 
 container.bind<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE).toDynamicValue(() => {
   return new SignInWithAppleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
@@ -41,6 +45,10 @@ container.bind<VerifyTokenUseCase>(TYPES.VERIFY_TOKEN_USE_CASE).toDynamicValue((
 
 container.bind<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE).toDynamicValue(() => {
   return new RefreshTokenUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
+});
+
+container.bind<GetWorkoutsTemplateUpdateUseCase>(TYPES.GET_WORKOUTS_TEMPLATE_UPDATE_USE_CASE).toDynamicValue(() => {
+  return new GetWorkoutsTemplateUpdateUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
 });
 
 export { container };
