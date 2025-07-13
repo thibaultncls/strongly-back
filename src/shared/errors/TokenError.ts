@@ -21,4 +21,8 @@ export class TokenError extends Error {
   static tokenVerificationFailed() {
     return new TokenError("Token verification failed.");
   }
+
+  static refreshTokenFailed() {
+    return new TokenError("Refresh token failed.");
+  }
 }

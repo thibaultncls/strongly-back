@@ -1,6 +1,6 @@
 import { supabase } from "@config/supabase.js";
 import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
-import type { AuthService, AuthToken, AuthUser } from "@features/auth/domain/services/auth.service.js";
+import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
 import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 import { OtpError } from "../errors/otp.error.js";
@@ -10,7 +10,7 @@ import { RefreshTokenError } from "../errors/refresh-token.error.js";
 import { TokenError } from "@shared/errors/TokenError.js";
 
 export class AuthServiceSupabase implements AuthService {
-  async getCurrentUser(token: string): Promise<AuthUser> {
+  async getCurrentUser(token: string, refreshToken: string): Promise<AuthToken> {
     const { data, error } = await supabase.auth.getUser(token);
 
     if (error) {
@@ -21,9 +21,23 @@ export class AuthServiceSupabase implements AuthService {
       throw new TokenError("No user data returned from Supabase");
     }
 
+    const { data: sessionData, error: sessionError } = await supabase.auth.refreshSession({
+      refresh_token: refreshToken,
+    });
+
+    if (sessionError) {
+      throw TokenError.refreshTokenFailed();
+    }
+
+    if (!sessionData || !sessionData.session) {
+      throw new TokenError("No session data returned from Supabase");
+    }
+
     return {
-      id: data.user.id,
-      email: data.user.email ? data.user.email : null,
+      accessToken: sessionData.session.access_token,
+      refreshToken: sessionData.session.refresh_token,
+      userId: data.user.id,
+      email: data.user.email,
     };
   }
 

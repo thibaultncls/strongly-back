@@ -153,10 +153,18 @@ export async function refreshToken(c: Context) {
 
 export async function getCurrentUser(c: Context) {
   const token = c.req.header("Authorization")?.replace("Bearer ", "");
+  const refreshToken = await c.req.json();
 
   try {
     const useCase = container.get<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE);
-    const user = await useCase.execute(token);
+    const user = await useCase.execute(token, refreshToken);
+
+    return c.json({
+      accessToken: user.accessToken,
+      refreshToken: user.refreshToken,
+      userId: user.userId,
+      email: user.email,
+    });
   } catch (error) {
     if (error instanceof TokenError) {
       return c.json({ error: error.message }, 401);
