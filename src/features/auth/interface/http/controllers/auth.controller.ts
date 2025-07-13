@@ -167,6 +167,7 @@ export async function getCurrentUser(c: Context) {
     });
   } catch (error) {
     if (error instanceof TokenError) {
+      console.error("Token error:", error);
       return c.json({ error: error.message }, 401);
     } else {
       console.error("Unexpected error:", error);

@@ -8,6 +8,6 @@ auth.post("/sign-in-with-google", signInWithGoogle);
 auth.post("/send-otp", sendOtp);
 auth.post("/verify-otp", verifyOtp);
 auth.post("/refresh-token", refreshToken);
-auth.get("/current-user", getCurrentUser);
+auth.post("/current-user", getCurrentUser);
 
 export default auth;

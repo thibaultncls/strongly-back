@@ -8,37 +8,23 @@ import type { Email } from "@features/auth/domain/value-object/email.vo.js";
 import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
 import { RefreshTokenError } from "../errors/refresh-token.error.js";
 import { TokenError } from "@shared/errors/TokenError.js";
+import { log } from "console";
 
 export class AuthServiceSupabase implements AuthService {
   async getCurrentUser(token: string, refreshToken: string): Promise<AuthToken> {
+    log("Getting current user with token:", token);
+    log("Using refresh token:", refreshToken);
     const { data, error } = await supabase.auth.getUser(token);
-
     if (error) {
+      console.error("Error getting user:", error);
       throw TokenError.tokenVerificationFailed();
     }
 
-    if (!data.user || !data.user) {
+    if (!data.user) {
       throw new TokenError("No user data returned from Supabase");
     }
 
-    const { data: sessionData, error: sessionError } = await supabase.auth.refreshSession({
-      refresh_token: refreshToken,
-    });
-
-    if (sessionError) {
-      throw TokenError.refreshTokenFailed();
-    }
-
-    if (!sessionData || !sessionData.session) {
-      throw new TokenError("No session data returned from Supabase");
-    }
-
-    return {
-      accessToken: sessionData.session.access_token,
-      refreshToken: sessionData.session.refresh_token,
-      userId: data.user.id,
-      email: data.user.email,
-    };
+    return await this.refreshToken(refreshToken);
   }
 
   async refreshToken(refreshToken: string): Promise<AuthToken> {
