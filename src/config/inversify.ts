@@ -1,3 +1,4 @@
+import { GetCurrentUserUseCase } from "@features/auth/application/use-cases/get-current-user.usecase.js";
 import { RefreshTokenUseCase } from "@features/auth/application/use-cases/refresh-token.usecase.js";
 import { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
@@ -49,6 +50,10 @@ container.bind<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE).toDynamicValue
 
 container.bind<GetWorkoutsTemplateUpdateUseCase>(TYPES.GET_WORKOUTS_TEMPLATE_UPDATE_USE_CASE).toDynamicValue(() => {
   return new GetWorkoutsTemplateUpdateUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
+});
+
+container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamicValue(() => {
+  return new GetCurrentUserUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
 });
 
 export { container };

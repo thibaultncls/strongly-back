@@ -1,4 +1,5 @@
 import { container } from "@config/inversify.js";
+import type { GetCurrentUserUseCase } from "@features/auth/application/use-cases/get-current-user.usecase.js";
 import type { RefreshTokenUseCase } from "@features/auth/application/use-cases/refresh-token.usecase.js";
 import type { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
 import { SignInWithAppleUseCase } from "@features/auth/application/use-cases/sign-in-with-apple.usecase.js";
@@ -13,6 +14,7 @@ import { SignInWithOtpError } from "@features/auth/infrastructure/errors/sign-in
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { CreateError } from "@shared/errors/CreateError.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
+import { TokenError } from "@shared/errors/TokenError.js";
 import type { Context } from "hono";
 
 export async function signInWithApple(c: Context) {
@@ -144,6 +146,22 @@ export async function refreshToken(c: Context) {
     } else if (error instanceof RefreshTokenError) {
       return c.json({ error: error.message }, 500);
     } else {
+      return c.json({ error: "An unexpected error occurred" }, 500);
+    }
+  }
+}
+
+export async function getCurrentUser(c: Context) {
+  const token = c.req.header("Authorization")?.replace("Bearer ", "");
+
+  try {
+    const useCase = container.get<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE);
+    const user = await useCase.execute(token);
+  } catch (error) {
+    if (error instanceof TokenError) {
+      return c.json({ error: error.message }, 401);
+    } else {
+      console.error("Unexpected error:", error);
       return c.json({ error: "An unexpected error occurred" }, 500);
     }
   }

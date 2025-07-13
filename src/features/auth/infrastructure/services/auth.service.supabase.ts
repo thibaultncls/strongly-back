@@ -1,14 +1,32 @@
 import { supabase } from "@config/supabase.js";
 import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
-import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
+import type { AuthService, AuthToken, AuthUser } from "@features/auth/domain/services/auth.service.js";
 import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
 import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 import { OtpError } from "../errors/otp.error.js";
 import type { Email } from "@features/auth/domain/value-object/email.vo.js";
 import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
 import { RefreshTokenError } from "../errors/refresh-token.error.js";
+import { TokenError } from "@shared/errors/TokenError.js";
 
 export class AuthServiceSupabase implements AuthService {
+  async getCurrentUser(token: string): Promise<AuthUser> {
+    const { data, error } = await supabase.auth.getUser(token);
+
+    if (error) {
+      throw TokenError.tokenVerificationFailed();
+    }
+
+    if (!data.user || !data.user) {
+      throw new TokenError("No user data returned from Supabase");
+    }
+
+    return {
+      id: data.user.id,
+      email: data.user.email ? data.user.email : null,
+    };
+  }
+
   async refreshToken(refreshToken: string): Promise<AuthToken> {
     const { data, error } = await supabase.auth.refreshSession({
       refresh_token: refreshToken,
