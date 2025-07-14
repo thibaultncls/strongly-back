@@ -6,7 +6,7 @@ export class GetCurrentUserUseCase {
   constructor(private authService: AuthService) {}
 
   async execute(token?: string, refreshToken?: string): Promise<AuthToken> {
-    if (!token || !refreshToken) {
+    if (!token || !refreshToken || typeof token !== "string" || typeof refreshToken !== "string") {
       throw TokenError.tokenNotFound();
     }
 

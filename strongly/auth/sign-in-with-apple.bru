@@ -1,0 +1,17 @@
+meta {
+  name: sign-in-with-apple
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/auth/sign-in-with-apple
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "token": "eyJraWQiOiJTZjJsRnF3a3BYIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLnRoaWJhdWx0LnN0cm9uZ2x5IiwiZXhwIjoxNzUxNjIwMzU1LCJpYXQiOjE3NTE1MzM5NTUsInN1YiI6IjAwMDQxMC40YzIxNGYxNjAxNDU0NzdmYjcyNTA5YmJiMDI4NDE4OS4xNzM4IiwiY19oYXNoIjoiT2drWk5lZjQ3Mk5QakQyN0F2SDZ2QSIsImVtYWlsIjoidGhpYmF1bHQtbkBob3RtYWlsLmZyIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1dGhfdGltZSI6MTc1MTUzMzk1NSwibm9uY2Vfc3VwcG9ydGVkIjp0cnVlfQ.PerCdCtI9YeJAbi3c5RXx6zoDDzF9HuhgWx-xKigPkTS8l7eOs0DemzZSiDwgwOOeymMsLb79WspLdCiePNf_PXqn5ybTbisRlFLEqP3jyDFfUrKQyX4tlIBJEHz8R1pJAnexNqBbPsbXktecRtfcXFxWH6oGOCGjyGsaaJqFszHbKJOdcftoWvKh5Ovb9Edf0vnsRcobh02jegeoGw11Q39Fr6CJdKQscnRB577YO5-BqjyMUM70AN06JAZRX2Al-bZZ94MSfaKIp4bzQWODvRpMjgVKTaXjS3h3aNvv7E9iqNbyZ0-4Q8XqXksQ8sCr6Viw7IP76HBDXQS1bwEvA"
+  }
+}

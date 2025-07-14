@@ -16,7 +16,10 @@ export class AuthServiceSupabase implements AuthService {
     log("Using refresh token:", refreshToken);
     const { data, error } = await supabase.auth.getUser(token);
     if (error) {
-      console.error("Error getting user:", error);
+      console.error("Error getting user:", error.code);
+      if (error.code === "bad_jwt") {
+        return await this.refreshToken(refreshToken);
+      }
       throw TokenError.tokenVerificationFailed();
     }
 

@@ -153,7 +153,7 @@ export async function refreshToken(c: Context) {
 
 export async function getCurrentUser(c: Context) {
   const token = c.req.header("Authorization")?.replace("Bearer ", "");
-  const refreshToken = await c.req.json();
+  const { refreshToken } = await c.req.json();
 
   try {
     const useCase = container.get<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE);
@@ -168,6 +168,9 @@ export async function getCurrentUser(c: Context) {
   } catch (error) {
     if (error instanceof TokenError) {
       console.error("Token error:", error);
+      return c.json({ error: error.message }, 401);
+    } else if (error instanceof RefreshTokenError) {
+      console.error("Refresh token error:", error);
       return c.json({ error: error.message }, 401);
     } else {
       console.error("Unexpected error:", error);
