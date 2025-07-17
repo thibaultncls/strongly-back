@@ -9,6 +9,5 @@ export const TYPES = {
   TOKEN_SERVICE: Symbol.for("TokenService"),
   REFRESH_TOKEN_USE_CASE: Symbol.for("RefreshTokenUseCase"),
   DASHBOARD_REPOSITORY: Symbol.for("DashboardRepository"),
-  GET_WORKOUTS_TEMPLATE_UPDATE_USE_CASE: Symbol.for("GetWorkoutsTemplateUpdateUseCase"),
   GET_CURRENT_USER_USE_CASE: Symbol.for("GetCurrentUserUseCase"),
 };

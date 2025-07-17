@@ -8,7 +8,6 @@ import type { AuthRepository } from "@features/auth/domain/repositories/auth.rep
 import type { AuthService } from "@features/auth/domain/services/auth.service.js";
 import { AuthRepositorySupabase } from "@features/auth/infrastructure/repositories/auth.repository.supabase.js";
 import { AuthServiceSupabase } from "@features/auth/infrastructure/services/auth.service.supabase.js";
-import { GetWorkoutsTemplateUpdateUseCase } from "@features/dashboard/application/use-case/get-workouts-template-update.usecase.js";
 import type { DashboardRepository } from "@features/dashboard/domain/repositories/dashboard.repository.js";
 import { DashboardRepositorySupabase } from "@features/dashboard/infrastructure/repositories/dashboard.repository.supabase.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
@@ -46,10 +45,6 @@ container.bind<VerifyTokenUseCase>(TYPES.VERIFY_TOKEN_USE_CASE).toDynamicValue((
 
 container.bind<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE).toDynamicValue(() => {
   return new RefreshTokenUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
-});
-
-container.bind<GetWorkoutsTemplateUpdateUseCase>(TYPES.GET_WORKOUTS_TEMPLATE_UPDATE_USE_CASE).toDynamicValue(() => {
-  return new GetWorkoutsTemplateUpdateUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
 });
 
 container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamicValue(() => {

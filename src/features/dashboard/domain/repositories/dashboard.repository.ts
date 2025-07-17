@@ -1,27 +1,20 @@
 export interface WorkoutTemplate {
-  id: string;
+  id: number;
   name: string;
+  updated_at: string; // ISO 8601 format
   order: number;
   exercises: {
+    id: number;
+    updated_at: string; // ISO 8601 format
     name: string;
     setNumber: number;
-  }[];
-}
-
-export interface WorkoutTemplateUpdate {
-  workout_id: string;
-  workout_update: string; // ISO 8601 timestamp
-  exercises: {
-    exercise_id: string;
-    exercise_update: string; // ISO 8601 timestamp
     sets: {
-      set_id: string;
-      set_update: string; // ISO 8601 timestamp
-    }[];
+      id: number;
+      updated_at: string; // ISO 8601 format
+    };
   }[];
 }
 
 export interface DashboardRepository {
-  getTemplateUpdates(userId: string): Promise<WorkoutTemplateUpdate[]>;
   getWorkoutTemplates(userId: string): Promise<WorkoutTemplate[]>;
 }
