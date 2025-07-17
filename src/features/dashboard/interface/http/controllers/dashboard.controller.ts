@@ -14,6 +14,7 @@ export async function getWorkoutTemplates(c: Context) {
 
     return c.json({ workoutTemplates });
   } catch (error) {
+    console.error("Error fetching workout templates:", error);
     if (error instanceof RequestError) {
       return c.json({ error: error.message }, 500);
     } else if (error instanceof InvalidArgumentsError) {
