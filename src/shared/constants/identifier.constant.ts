@@ -10,4 +10,5 @@ export const TYPES = {
   REFRESH_TOKEN_USE_CASE: Symbol.for("RefreshTokenUseCase"),
   DASHBOARD_REPOSITORY: Symbol.for("DashboardRepository"),
   GET_CURRENT_USER_USE_CASE: Symbol.for("GetCurrentUserUseCase"),
+  GET_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutTemplatesUseCase"),
 };
