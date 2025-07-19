@@ -159,6 +159,8 @@ export async function getCurrentUser(c: Context) {
     const useCase = container.get<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE);
     const user = await useCase.execute(token, refreshToken);
 
+    console.log("Current user:", user);
+
     return c.json({
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,

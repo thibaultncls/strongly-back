@@ -8,12 +8,9 @@ import type { Email } from "@features/auth/domain/value-object/email.vo.js";
 import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
 import { RefreshTokenError } from "../errors/refresh-token.error.js";
 import { TokenError } from "@shared/errors/TokenError.js";
-import { log } from "console";
 
 export class AuthServiceSupabase implements AuthService {
   async getCurrentUser(token: string, refreshToken: string): Promise<AuthToken> {
-    log("Getting current user with token:", token);
-    log("Using refresh token:", refreshToken);
     const { data, error } = await supabase.auth.getUser(token);
     if (error) {
       console.error("Error getting user:", error.code);
