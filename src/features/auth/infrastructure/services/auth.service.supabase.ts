@@ -12,8 +12,8 @@ import { TokenError } from "@shared/errors/TokenError.js";
 export class AuthServiceSupabase implements AuthService {
   async getCurrentUser(token: string, refreshToken: string): Promise<AuthToken> {
     const { data, error } = await supabase.auth.getUser(token);
+
     if (error) {
-      console.error("Error getting user:", error.code);
       if (error.code === "bad_jwt") {
         return await this.refreshToken(refreshToken);
       }
@@ -24,7 +24,12 @@ export class AuthServiceSupabase implements AuthService {
       throw new TokenError("No user data returned from Supabase");
     }
 
-    return await this.refreshToken(refreshToken);
+    return {
+      accessToken: token,
+      refreshToken: refreshToken,
+      userId: data.user.id,
+      email: data.user.email,
+    };
   }
 
   async refreshToken(refreshToken: string): Promise<AuthToken> {
