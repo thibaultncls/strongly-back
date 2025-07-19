@@ -38,18 +38,21 @@ export type Database = {
           body_part: string;
           created_at: string;
           id: number;
+          is_deleted: boolean;
           updated_at: string;
         };
         Insert: {
           body_part: string;
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           updated_at?: string;
         };
         Update: {
           body_part?: string;
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           updated_at?: string;
         };
         Relationships: [];
@@ -59,6 +62,7 @@ export type Database = {
           created_at: string;
           description: string | null;
           id: number;
+          is_deleted: boolean;
           name: string;
           updated_at: string;
           user_id: string | null;
@@ -67,6 +71,7 @@ export type Database = {
           created_at?: string;
           description?: string | null;
           id?: number;
+          is_deleted?: boolean;
           name: string;
           updated_at?: string;
           user_id?: string | null;
@@ -75,6 +80,7 @@ export type Database = {
           created_at?: string;
           description?: string | null;
           id?: number;
+          is_deleted?: boolean;
           name?: string;
           updated_at?: string;
           user_id?: string | null;
@@ -94,18 +100,21 @@ export type Database = {
           body_part_id: number;
           created_at: string;
           exercise_id: number;
+          is_deleted: boolean;
           updated_at: string;
         };
         Insert: {
           body_part_id: number;
           created_at?: string;
           exercise_id: number;
+          is_deleted?: boolean;
           updated_at?: string;
         };
         Update: {
           body_part_id?: number;
           created_at?: string;
           exercise_id?: number;
+          is_deleted?: boolean;
           updated_at?: string;
         };
         Relationships: [
@@ -129,18 +138,21 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          is_deleted: boolean;
           type: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           type: string;
           updated_at?: string;
         };
         Update: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           type?: string;
           updated_at?: string;
         };
@@ -150,18 +162,21 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          is_deleted: boolean;
           name: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           name: string;
           updated_at?: string;
         };
         Update: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           name?: string;
           updated_at?: string;
         };
@@ -171,6 +186,7 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          is_deleted: boolean;
           note: string | null;
           reps: number;
           set_number: number;
@@ -181,6 +197,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           note?: string | null;
           reps: number;
           set_number: number;
@@ -191,6 +208,7 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           note?: string | null;
           reps?: number;
           set_number?: number;
@@ -214,6 +232,7 @@ export type Database = {
           failure: boolean;
           instensity_id: number;
           intensity_level: number | null;
+          is_deleted: boolean;
           set_id: number;
           updated_at: string;
         };
@@ -222,6 +241,7 @@ export type Database = {
           failure: boolean;
           instensity_id: number;
           intensity_level?: number | null;
+          is_deleted?: boolean;
           set_id: number;
           updated_at?: string;
         };
@@ -230,6 +250,7 @@ export type Database = {
           failure?: boolean;
           instensity_id?: number;
           intensity_level?: number | null;
+          is_deleted?: boolean;
           set_id?: number;
           updated_at?: string;
         };
@@ -253,6 +274,7 @@ export type Database = {
       set_set_type: {
         Row: {
           created_at: string;
+          is_deleted: boolean;
           set_group: number;
           set_id: number;
           set_type_id: number;
@@ -260,6 +282,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          is_deleted?: boolean;
           set_group: number;
           set_id: number;
           set_type_id: number;
@@ -267,6 +290,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          is_deleted?: boolean;
           set_group?: number;
           set_id?: number;
           set_type_id?: number;
@@ -293,18 +317,21 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          is_deleted: boolean;
           type: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           type: string;
           updated_at?: string;
         };
         Update: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           type?: string;
           updated_at?: string;
         };
@@ -315,6 +342,7 @@ export type Database = {
           created_at: string;
           duration: number;
           id: number;
+          is_deleted: boolean;
           name: string;
           price: number;
           prioriy: number;
@@ -324,6 +352,7 @@ export type Database = {
           created_at?: string;
           duration: number;
           id?: number;
+          is_deleted?: boolean;
           name: string;
           price: number;
           prioriy: number;
@@ -333,6 +362,7 @@ export type Database = {
           created_at?: string;
           duration?: number;
           id?: number;
+          is_deleted?: boolean;
           name?: string;
           price?: number;
           prioriy?: number;
@@ -345,6 +375,7 @@ export type Database = {
           created_at: string;
           exercise_id: number;
           id: number;
+          is_deleted: boolean;
           order: number;
           set_up: string | null;
           template_id: number;
@@ -354,6 +385,7 @@ export type Database = {
           created_at?: string;
           exercise_id: number;
           id?: number;
+          is_deleted?: boolean;
           order: number;
           set_up?: string | null;
           template_id: number;
@@ -363,6 +395,7 @@ export type Database = {
           created_at?: string;
           exercise_id?: number;
           id?: number;
+          is_deleted?: boolean;
           order?: number;
           set_up?: string | null;
           template_id?: number;
@@ -390,6 +423,7 @@ export type Database = {
           created_at: string;
           exercise_group: number;
           exercise_type_id: number;
+          is_deleted: boolean;
           template_exercise_id: number;
           updated_at: string;
         };
@@ -397,6 +431,7 @@ export type Database = {
           created_at?: string;
           exercise_group: number;
           exercise_type_id: number;
+          is_deleted?: boolean;
           template_exercise_id: number;
           updated_at?: string;
         };
@@ -404,6 +439,7 @@ export type Database = {
           created_at?: string;
           exercise_group?: number;
           exercise_type_id?: number;
+          is_deleted?: boolean;
           template_exercise_id?: number;
           updated_at?: string;
         };
@@ -429,6 +465,7 @@ export type Database = {
           created_at: string;
           high_rep: number | null;
           id: number;
+          is_deleted: boolean;
           low_rep: number | null;
           set_number: number | null;
           template_exercise_id: number;
@@ -438,6 +475,7 @@ export type Database = {
           created_at?: string;
           high_rep?: number | null;
           id?: number;
+          is_deleted?: boolean;
           low_rep?: number | null;
           set_number?: number | null;
           template_exercise_id: number;
@@ -447,6 +485,7 @@ export type Database = {
           created_at?: string;
           high_rep?: number | null;
           id?: number;
+          is_deleted?: boolean;
           low_rep?: number | null;
           set_number?: number | null;
           template_exercise_id?: number;
@@ -465,6 +504,7 @@ export type Database = {
       template_set_type: {
         Row: {
           created_at: string;
+          is_deleted: boolean;
           set_group: number;
           set_type_id: number;
           template_set_id: number;
@@ -472,6 +512,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          is_deleted?: boolean;
           set_group: number;
           set_type_id: number;
           template_set_id: number;
@@ -479,6 +520,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          is_deleted?: boolean;
           set_group?: number;
           set_type_id?: number;
           template_set_id?: number;
@@ -506,6 +548,7 @@ export type Database = {
           created_at: string;
           email: string | null;
           id: string;
+          is_deleted: boolean;
           name: string | null;
           updated_at: string;
         };
@@ -513,6 +556,7 @@ export type Database = {
           created_at?: string;
           email?: string | null;
           id?: string;
+          is_deleted?: boolean;
           name?: string | null;
           updated_at?: string;
         };
@@ -520,6 +564,7 @@ export type Database = {
           created_at?: string;
           email?: string | null;
           id?: string;
+          is_deleted?: boolean;
           name?: string | null;
           updated_at?: string;
         };
@@ -531,6 +576,7 @@ export type Database = {
           created_at: string;
           end_date: string | null;
           id: number;
+          is_deleted: boolean;
           subscription_id: number;
           updated_at: string;
           user_id: string;
@@ -540,6 +586,7 @@ export type Database = {
           created_at?: string;
           end_date?: string | null;
           id?: number;
+          is_deleted?: boolean;
           subscription_id: number;
           updated_at?: string;
           user_id: string;
@@ -549,6 +596,7 @@ export type Database = {
           created_at?: string;
           end_date?: string | null;
           id?: number;
+          is_deleted?: boolean;
           subscription_id?: number;
           updated_at?: string;
           user_id?: string;
@@ -575,6 +623,7 @@ export type Database = {
           created_at: string;
           duration: string;
           id: number;
+          is_deleted: boolean;
           note: string | null;
           updated_at: string;
           workout_template_id: number;
@@ -583,6 +632,7 @@ export type Database = {
           created_at?: string;
           duration: string;
           id?: number;
+          is_deleted?: boolean;
           note?: string | null;
           updated_at?: string;
           workout_template_id: number;
@@ -591,6 +641,7 @@ export type Database = {
           created_at?: string;
           duration?: string;
           id?: number;
+          is_deleted?: boolean;
           note?: string | null;
           updated_at?: string;
           workout_template_id?: number;
@@ -610,6 +661,7 @@ export type Database = {
           created_at: string;
           exercise_id: number;
           id: number;
+          is_deleted: boolean;
           order: number;
           set_up: string | null;
           updated_at: string;
@@ -619,6 +671,7 @@ export type Database = {
           created_at?: string;
           exercise_id: number;
           id?: number;
+          is_deleted?: boolean;
           order: number;
           set_up?: string | null;
           updated_at?: string;
@@ -628,6 +681,7 @@ export type Database = {
           created_at?: string;
           exercise_id?: number;
           id?: number;
+          is_deleted?: boolean;
           order?: number;
           set_up?: string | null;
           updated_at?: string;
@@ -655,6 +709,7 @@ export type Database = {
           created_at: string;
           exercise_group: number;
           exercise_type_id: number;
+          is_deleted: boolean;
           updated_at: string;
           workout_exercise_id: number;
         };
@@ -662,6 +717,7 @@ export type Database = {
           created_at?: string;
           exercise_group: number;
           exercise_type_id: number;
+          is_deleted?: boolean;
           updated_at?: string;
           workout_exercise_id: number;
         };
@@ -669,6 +725,7 @@ export type Database = {
           created_at?: string;
           exercise_group?: number;
           exercise_type_id?: number;
+          is_deleted?: boolean;
           updated_at?: string;
           workout_exercise_id?: number;
         };
@@ -693,6 +750,7 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          is_deleted: boolean;
           name: string;
           order: number | null;
           updated_at: string;
@@ -701,6 +759,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           name: string;
           order?: number | null;
           updated_at?: string;
@@ -709,6 +768,7 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: number;
+          is_deleted?: boolean;
           name?: string;
           order?: number | null;
           updated_at?: string;
@@ -729,6 +789,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_sync_workout_template: {
+        Args: { user_id: string; last_synced_at: string };
+        Returns: Json;
+      };
       get_template_updates: {
         Args: { user_id: string };
         Returns: Json;

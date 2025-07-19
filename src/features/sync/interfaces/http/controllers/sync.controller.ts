@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import type { SyncWorkoutTemplate } from "../types/sync-workout-template.js";
+import type { SyncWorkoutTemplate } from "../types/sync-workout-template.type.js";
 
 export async function getClientWorkoutTemplates(c: Context) {
   const userId = c.get("user").id;
