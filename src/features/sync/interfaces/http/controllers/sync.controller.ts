@@ -3,18 +3,30 @@ import type { SyncWorkoutTemplate } from "../types/sync-workout-template.type.js
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { RequestError } from "@hono/node-server";
 import { container } from "@config/inversify.js";
-import type { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-template.usecase.js";
+import type { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-for-sync-template.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
+import type { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use-cases/sync-workout-templates.usecase.js";
 
 export async function getClientWorkoutTemplates(c: Context) {
   const userId = c.get("user").id;
-  const clientTemplates: SyncWorkoutTemplate = await c.req.json();
+  const clientTemplates: SyncWorkoutTemplate[] = await c.req.json();
 
-  console.log(`Received workout templates for user ${userId}:`, clientTemplates);
-  return c.json({
-    message: "Workout templates received successfully",
-    templates: clientTemplates,
-  });
+  try {
+    const templates = await container
+      .get<SyncWorkoutTemplatesUseCase>(TYPES.SYNC_WORKOUT_TEMPLATES_USE_CASE)
+      .execute(userId, clientTemplates);
+
+    return c.json({ templates: templates });
+  } catch (error: any) {
+    if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    }
+    if (error instanceof RequestError) {
+      return c.json({ error: error.message }, 500);
+    }
+    console.error("Error fetching workout templates:", error);
+    return c.json({ error: "Failed to fetch workout templates" }, 500);
+  }
 }
 
 export async function getWorkoutTemplates(c: Context) {
