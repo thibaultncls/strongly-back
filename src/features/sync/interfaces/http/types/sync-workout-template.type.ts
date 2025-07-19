@@ -2,6 +2,7 @@ export type SyncWorkoutTemplate = {
   id: number;
   user: {
     id: string;
+    is_deleted: boolean;
     name?: string | null;
     email?: string | null;
     created_at: string;
