@@ -1,10 +1,10 @@
 import { supabase } from "@config/supabase.js";
-import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import type { SyncRepository, WorkoutTemplatesFromSupabase } from "@features/sync/domain/repositories/sync.repository.js";
 import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/sync-workout-template.type.js";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
-  async getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<any[]> {
+  async getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]> {
     const { data, error } = await supabase
       .from("workout_template")
       .select(
@@ -28,7 +28,7 @@ export class SyncRepositorySupabase implements SyncRepository {
 
     console.log(`Fetched ${data} workout templates for user ${userId}`);
 
-    return data;
+    return data as WorkoutTemplatesFromSupabase[];
   }
 
   async getWorkoutTemplates(userId: string, lastSync: string): Promise<SyncWorkoutTemplate[]> {
