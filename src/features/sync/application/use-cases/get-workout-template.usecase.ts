@@ -2,7 +2,7 @@ import type { SyncRepository } from "@features/sync/domain/repositories/sync.rep
 import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/sync-workout-template.type.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 
-export class getWorkoutTemplatesUseCase {
+export class GetWorkoutForSyncTemplatesUseCase {
   constructor(private readonly syncRepository: SyncRepository) {}
 
   async execute(userId: string, lastSync: string): Promise<SyncWorkoutTemplate[]> {

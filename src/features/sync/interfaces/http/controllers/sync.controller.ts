@@ -2,6 +2,9 @@ import type { Context } from "hono";
 import type { SyncWorkoutTemplate } from "../types/sync-workout-template.type.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { RequestError } from "@hono/node-server";
+import { container } from "@config/inversify.js";
+import type { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-template.usecase.js";
+import { TYPES } from "@shared/constants/identifier.constant.js";
 
 export async function getClientWorkoutTemplates(c: Context) {
   const userId = c.get("user").id;
@@ -19,7 +22,10 @@ export async function getWorkoutTemplates(c: Context) {
   const { lastSync } = await c.req.json();
 
   try {
-    const templates: SyncWorkoutTemplate[] = await c.get("syncRepository").getWorkoutTemplates(userId, lastSync);
+    const templates = await container
+      .get<GetWorkoutForSyncTemplatesUseCase>(TYPES.GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE)
+      .execute(userId, lastSync);
+
     return c.json({ templates: templates });
   } catch (error: any) {
     if (error instanceof InvalidArgumentsError) {

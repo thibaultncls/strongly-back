@@ -11,6 +11,9 @@ import { AuthServiceSupabase } from "@features/auth/infrastructure/services/auth
 import { GetWorkoutTemplatesUseCase } from "@features/dashboard/application/use-case/get-workout-templates.usecase.js";
 import type { DashboardRepository } from "@features/dashboard/domain/repositories/dashboard.repository.js";
 import { DashboardRepositorySupabase } from "@features/dashboard/infrastructure/repositories/dashboard.repository.supabase.js";
+import { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-template.usecase.js";
+import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import { SyncRepositorySupabase } from "@features/sync/infrastructure/repositories/sync.repository.supabase.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { TokenServiceSupabase } from "@shared/infrastructure/token.service.supabase.js";
@@ -23,6 +26,7 @@ container.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthServiceSupabase);
 container.bind<AuthRepository>(TYPES.AUTH_REPOSITORY).to(AuthRepositorySupabase);
 container.bind<TokenService>(TYPES.TOKEN_SERVICE).to(TokenServiceSupabase);
 container.bind<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY).to(DashboardRepositorySupabase);
+container.bind<SyncRepository>(TYPES.SYNC_REPOSITORY).to(SyncRepositorySupabase);
 
 container.bind<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE).toDynamicValue(() => {
   return new SignInWithAppleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
@@ -54,6 +58,10 @@ container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamic
 
 container.bind<GetWorkoutTemplatesUseCase>(TYPES.GET_WORKOUT_TEMPLATES_USE_CASE).toDynamicValue(() => {
   return new GetWorkoutTemplatesUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
+});
+
+container.bind<GetWorkoutForSyncTemplatesUseCase>(TYPES.GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE).toDynamicValue(() => {
+  return new GetWorkoutForSyncTemplatesUseCase(container.get<SyncRepository>(TYPES.SYNC_REPOSITORY));
 });
 
 export { container };

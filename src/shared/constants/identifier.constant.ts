@@ -11,4 +11,7 @@ export const TYPES = {
   DASHBOARD_REPOSITORY: Symbol.for("DashboardRepository"),
   GET_CURRENT_USER_USE_CASE: Symbol.for("GetCurrentUserUseCase"),
   GET_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutTemplatesUseCase"),
+  SYNC_REPOSITORY: Symbol.for("SyncRepository"),
+  SYNC_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("SyncWorkoutTemplatesUseCase"),
+  GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutForSyncTemplatesUseCase"),
 };
