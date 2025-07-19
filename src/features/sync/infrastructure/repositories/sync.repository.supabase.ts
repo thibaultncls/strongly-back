@@ -4,8 +4,7 @@ import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/s
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
-  async getWorkoutTemplatesToSync(userId: string, templates: SyncWorkoutTemplate[]): Promise<any[]> {
-    const ids = templates.map((template) => template.id);
+  async getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<any[]> {
     const { data, error } = await supabase
       .from("workout_template")
       .select(
