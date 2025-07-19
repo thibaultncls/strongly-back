@@ -17,6 +17,10 @@ export class SyncRepositorySupabase implements SyncRepository {
     if (error) {
       throw new RequestError(`Error fetching workout templates: ${error.message}`);
     }
+    if (!data || !Array.isArray(data)) {
+      throw new RequestError("Invalid response format from Supabase");
+    }
+
     return data as SyncWorkoutTemplate[];
   }
 }
