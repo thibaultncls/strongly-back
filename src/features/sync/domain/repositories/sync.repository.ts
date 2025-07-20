@@ -3,6 +3,7 @@ import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/s
 export interface SyncRepository {
   getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]>;
   getWorkoutTemplates(userId: string, lastSync: string): Promise<SyncWorkoutTemplate[]>;
+  checkUserDeviceId(userId: string, deviceId: string): Promise<boolean>;
 }
 
 export interface WorkoutTemplatesFromSupabase {

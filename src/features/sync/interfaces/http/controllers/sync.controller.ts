@@ -6,6 +6,7 @@ import { container } from "@config/inversify.js";
 import type { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-for-sync-template.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import type { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use-cases/sync-workout-templates.usecase.js";
+import type { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 
 export async function getClientWorkoutTemplates(c: Context) {
   const userId = c.get("user").id;
@@ -48,5 +49,25 @@ export async function getWorkoutTemplates(c: Context) {
     }
     console.error("Error fetching workout templates:", error);
     return c.json({ error: "Failed to fetch workout templates" }, 500);
+  }
+}
+
+export async function checkUserDeviceId(c: Context) {
+  const userId = c.get("user").id;
+  const { deviceId } = await c.req.json();
+
+  try {
+    const isValid = await container.get<CheckUserDeviceUseCase>(TYPES.CHECK_USER_DEVICE_USE_CASE).execute(userId, deviceId);
+
+    return c.json({ isValid });
+  } catch (error: any) {
+    if (error instanceof InvalidArgumentsError) {
+      return c.json({ error: error.message }, 400);
+    }
+    if (error instanceof RequestError) {
+      return c.json({ error: error.message }, 500);
+    }
+    console.error("Error checking user device ID:", error);
+    return c.json({ error: "Failed to check user device ID" }, 500);
   }
 }

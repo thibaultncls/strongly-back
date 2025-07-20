@@ -4,6 +4,15 @@ import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/s
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
+  async checkUserDeviceId(userId: string, deviceId: string): Promise<boolean> {
+    const { data, error } = await supabase.from("user").select("id").eq("user_id", userId).eq("device_id", deviceId).single();
+
+    if (error) {
+      throw new RequestError(`Error checking user device ID: ${error.message}`);
+    }
+
+    return data !== null;
+  }
   async getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]> {
     const { data, error } = await supabase
       .from("workout_template")

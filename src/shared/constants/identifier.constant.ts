@@ -14,4 +14,5 @@ export const TYPES = {
   SYNC_REPOSITORY: Symbol.for("SyncRepository"),
   SYNC_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("SyncWorkoutTemplatesUseCase"),
   GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutForSyncTemplatesUseCase"),
+  CHECK_USER_DEVICE_USE_CASE: Symbol.for("CheckUserDeviceUseCase"),
 };
