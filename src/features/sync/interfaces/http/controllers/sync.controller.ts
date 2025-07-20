@@ -32,7 +32,7 @@ export async function getClientWorkoutTemplates(c: Context) {
 
 export async function getWorkoutTemplates(c: Context) {
   const userId = c.get("user").id;
-  const { lastSync } = await c.req.json();
+  const { lastSync, deviceId } = await c.req.json();
 
   try {
     const templates = await container
