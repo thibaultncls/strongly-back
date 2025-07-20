@@ -4,6 +4,19 @@ import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/s
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
+  async getExercisesByUserId(userId: string): Promise<{ id: number; name: string }[]> {
+    const { data, error } = await supabase.from("exercise").select("*").or(`user_id.eq.${userId},user_id.is.null`).eq("is_deleted", false);
+
+    if (error) {
+      throw new RequestError(`Error fetching exercises: ${error.message}`);
+    }
+    if (!data || !Array.isArray(data)) {
+      throw new RequestError("Invalid response format from Supabase");
+    }
+
+    return data;
+  }
+
   async checkUserDeviceId(userId: string, deviceId: string): Promise<boolean> {
     const { data, error } = await supabase.from("user").select("id").eq("user_id", userId).eq("device_id", deviceId).single();
 

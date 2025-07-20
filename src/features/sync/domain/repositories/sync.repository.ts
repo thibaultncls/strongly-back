@@ -4,6 +4,7 @@ export interface SyncRepository {
   getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]>;
   getWorkoutTemplates(userId: string, lastSync: string): Promise<SyncWorkoutTemplate[]>;
   checkUserDeviceId(userId: string, deviceId: string): Promise<boolean>;
+  getExercisesByUserId(userId: string): Promise<{ id: number; name: string }[]>;
 }
 
 export interface WorkoutTemplatesFromSupabase {
