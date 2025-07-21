@@ -4,7 +4,7 @@ export interface SyncRepository {
   getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]>;
   getWorkoutTemplates(userId: string, lastSync: string): Promise<SyncWorkoutTemplate[]>;
   checkUserDeviceId(userId: string, deviceId: string): Promise<boolean>;
-  getExercisesByUserId(userId: string, lastSync: string): Promise<SyncExercises[]>;
+  getNonSyncData(userId: string, lastSync: string): Promise<any>; // Placeholder for non-sync data method
 }
 
 export interface WorkoutTemplatesFromSupabase {
@@ -52,13 +52,4 @@ export interface WorkoutTemplatesFromSupabase {
       template_exercise_id: number;
     }[];
   }[];
-}
-
-export interface SyncExercises {
-  id: number;
-  name: string;
-  user_id?: string | null;
-  created_at: string;
-  updated_at: string;
-  is_deleted: boolean;
 }

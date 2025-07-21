@@ -546,6 +546,7 @@ export type Database = {
       user: {
         Row: {
           created_at: string;
+          device_id: string | null;
           email: string | null;
           id: string;
           is_deleted: boolean;
@@ -554,6 +555,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          device_id?: string | null;
           email?: string | null;
           id?: string;
           is_deleted?: boolean;
@@ -562,6 +564,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          device_id?: string | null;
           email?: string | null;
           id?: string;
           is_deleted?: boolean;
@@ -799,6 +802,10 @@ export type Database = {
       };
       get_workout_template_with_exercise_sets: {
         Args: { user_id: string };
+        Returns: Json;
+      };
+      sync_user_data: {
+        Args: { user_id: string; last_sync: string };
         Returns: Json;
       };
     };
