@@ -1,11 +1,16 @@
 import { supabase } from "@config/supabase.js";
-import type { SyncRepository, WorkoutTemplatesFromSupabase } from "@features/sync/domain/repositories/sync.repository.js";
+import type { SyncExercises, SyncRepository, WorkoutTemplatesFromSupabase } from "@features/sync/domain/repositories/sync.repository.js";
 import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/sync-workout-template.type.js";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
-  async getExercisesByUserId(userId: string): Promise<{ id: number; name: string }[]> {
-    const { data, error } = await supabase.from("exercise").select("*").or(`user_id.eq.${userId},user_id.is.null`).eq("is_deleted", false);
+  async getExercisesByUserId(userId: string, lastSync: string): Promise<SyncExercises[]> {
+    const { data, error } = await supabase
+      .from("exercise")
+      .select("*")
+      .or(`user_id.eq.${userId},user_id.is.null`)
+      .eq("is_deleted", false)
+      .gt("updated_at", lastSync);
 
     if (error) {
       throw new RequestError(`Error fetching exercises: ${error.message}`);
@@ -14,7 +19,7 @@ export class SyncRepositorySupabase implements SyncRepository {
       throw new RequestError("Invalid response format from Supabase");
     }
 
-    return data;
+    return data as SyncExercises[];
   }
 
   async checkUserDeviceId(userId: string, deviceId: string): Promise<boolean> {
