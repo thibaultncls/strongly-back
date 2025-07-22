@@ -5,15 +5,20 @@ import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
   async getNonSyncData(userId: string, lastSync: string): Promise<any> {
-    const { data, error } = await supabase.rpc("sync_user_data", {
-      user_id: userId,
+    const { data, error, status } = await supabase.rpc("get_user_data", {
+      userid: userId,
       last_sync: lastSync,
     });
+
+    console.log(JSON.stringify(data, null, 2));
+    console.log(`Status: ${status}`);
+    console.log(`Error: ${error}`);
 
     if (error) {
       throw new RequestError(`Error fetching non-sync data: ${error.message}`);
     }
-    if (!data || !Array.isArray(data)) {
+
+    if (!data) {
       throw new RequestError("Invalid response format from Supabase");
     }
 

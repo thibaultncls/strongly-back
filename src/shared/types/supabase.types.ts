@@ -800,12 +800,16 @@ export type Database = {
         Args: { user_id: string };
         Returns: Json;
       };
+      get_user_data: {
+        Args: { userid: string; last_sync: string };
+        Returns: Json;
+      };
       get_workout_template_with_exercise_sets: {
         Args: { user_id: string };
         Returns: Json;
       };
       sync_user_data: {
-        Args: { user_id: string; last_sync: string };
+        Args: { userid: string; last_sync: string };
         Returns: Json;
       };
     };

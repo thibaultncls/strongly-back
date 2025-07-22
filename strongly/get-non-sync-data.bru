@@ -1,0 +1,17 @@
+meta {
+  name: get-non-sync-data
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/sync/non-sync-data
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "lastSync": "2000-01-01T00:00:00.000Z"
+  }
+}
