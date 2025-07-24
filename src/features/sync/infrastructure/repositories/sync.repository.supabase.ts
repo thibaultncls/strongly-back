@@ -10,10 +10,6 @@ export class SyncRepositorySupabase implements SyncRepository {
       last_sync: lastSync,
     });
 
-    console.log(JSON.stringify(data, null, 2));
-    console.log(`Status: ${status}`);
-    console.log(`Error: ${error}`);
-
     if (error) {
       throw new RequestError(`Error fetching non-sync data: ${error.message}`);
     }
@@ -34,6 +30,7 @@ export class SyncRepositorySupabase implements SyncRepository {
 
     return data !== null;
   }
+
   async getWorkoutTemplatesToSync(userId: string, ids: number[]): Promise<WorkoutTemplatesFromSupabase[]> {
     const { data, error } = await supabase
       .from("workout_template")
