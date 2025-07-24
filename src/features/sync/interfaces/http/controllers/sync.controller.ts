@@ -52,10 +52,10 @@ export async function checkUserDeviceId(c: Context) {
 
 export async function getNonSyncData(c: Context) {
   const userId = c.get("user").id;
-  const { lastSync } = await c.req.json();
+  const { lastSync, deviceId } = await c.req.json();
 
   try {
-    const nonSyncData = await container.get<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).execute(userId, lastSync);
+    const nonSyncData = await container.get<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).execute(userId, lastSync, deviceId);
     return c.json({ nonSyncData });
   } catch (error: any) {
     console.error("Error fetching non-sync data:", error);

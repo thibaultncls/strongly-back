@@ -4,6 +4,13 @@ import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/s
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
+  async updateUserDeviceId(userId: string, deviceId: string): Promise<void> {
+    const { error } = await supabase.from("user").update({ device_id: deviceId }).eq("id", userId);
+    if (error) {
+      throw new RequestError(`Error updating user device ID: ${error.message}`);
+    }
+  }
+
   async getNonSyncData(userId: string, lastSync: string): Promise<any> {
     const { data, error, status } = await supabase.rpc("get_user_data", {
       userid: userId,
