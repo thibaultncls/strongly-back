@@ -8,28 +8,6 @@ import type { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use
 import type { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 
-export async function getClientWorkoutTemplates(c: Context) {
-  const userId = c.get("user").id;
-  const clientTemplates: SyncWorkoutTemplate[] = await c.req.json();
-
-  try {
-    const templates = await container
-      .get<SyncWorkoutTemplatesUseCase>(TYPES.SYNC_WORKOUT_TEMPLATES_USE_CASE)
-      .execute(userId, clientTemplates);
-
-    return c.json({ templates: templates });
-  } catch (error: any) {
-    if (error instanceof InvalidArgumentsError) {
-      return c.json({ error: error.message }, 400);
-    }
-    if (error instanceof RequestError) {
-      return c.json({ error: error.message }, 500);
-    }
-    console.error("Error fetching workout templates:", error);
-    return c.json({ error: "Failed to fetch workout templates" }, 500);
-  }
-}
-
 export async function checkUserDeviceId(c: Context) {
   const userId = c.get("user").id;
   const { deviceId } = await c.req.json();

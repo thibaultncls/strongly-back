@@ -1,5 +1,6 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
+import { json } from "stream/consumers";
 
 export class GetNonSyncDataUseCase {
   constructor(private readonly syncRepository: SyncRepository) {}
@@ -10,6 +11,8 @@ export class GetNonSyncDataUseCase {
     }
 
     const nonSyncData = await this.syncRepository.getNonSyncData(userId, lastSync);
+
+    // console.log("Non-sync data fetched successfully:", JSON.stringify(nonSyncData, null, 2));
 
     await this.syncRepository.updateUserDeviceId(userId, deviceId);
 

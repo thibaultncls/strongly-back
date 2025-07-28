@@ -13,7 +13,6 @@ import type { DashboardRepository } from "@features/dashboard/domain/repositorie
 import { DashboardRepositorySupabase } from "@features/dashboard/infrastructure/repositories/dashboard.repository.supabase.js";
 import { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 import { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
-import { GetWorkoutForSyncTemplatesUseCase } from "@features/sync/application/use-cases/get-workout-for-sync-template.usecase.js";
 import { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use-cases/sync-workout-templates.usecase.js";
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import { SyncRepositorySupabase } from "@features/sync/infrastructure/repositories/sync.repository.supabase.js";
@@ -61,10 +60,6 @@ container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamic
 
 container.bind<GetWorkoutTemplatesUseCase>(TYPES.GET_WORKOUT_TEMPLATES_USE_CASE).toDynamicValue(() => {
   return new GetWorkoutTemplatesUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
-});
-
-container.bind<GetWorkoutForSyncTemplatesUseCase>(TYPES.GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE).toDynamicValue(() => {
-  return new GetWorkoutForSyncTemplatesUseCase(container.get<SyncRepository>(TYPES.SYNC_REPOSITORY));
 });
 
 container.bind<SyncWorkoutTemplatesUseCase>(TYPES.SYNC_WORKOUT_TEMPLATES_USE_CASE).toDynamicValue(() => {

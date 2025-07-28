@@ -13,7 +13,6 @@ export const TYPES = {
   GET_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutTemplatesUseCase"),
   SYNC_REPOSITORY: Symbol.for("SyncRepository"),
   SYNC_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("SyncWorkoutTemplatesUseCase"),
-  GET_WORKOUT_FOR_SYNC_TEMPLATES_USE_CASE: Symbol.for("GetWorkoutForSyncTemplatesUseCase"),
   CHECK_USER_DEVICE_USE_CASE: Symbol.for("CheckUserDeviceUseCase"),
   GET_NON_SYNC_DATA_USE_CASE: Symbol.for("GetNonSyncDataUseCase"),
 };
