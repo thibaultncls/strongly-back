@@ -1,5 +1,4 @@
 import type { Context } from "hono";
-import type { SyncWorkoutTemplate } from "../types/sync-workout-template.type.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { RequestError } from "@hono/node-server";
 import { container } from "@config/inversify.js";

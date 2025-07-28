@@ -1,5 +1,3 @@
-import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/sync-workout-template.type.js";
-
 export interface SyncRepository {
   /**
    * Checks if a user with the specified user ID has the given device ID.

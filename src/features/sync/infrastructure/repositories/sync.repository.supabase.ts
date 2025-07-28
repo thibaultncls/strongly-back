@@ -1,6 +1,5 @@
 import { supabase } from "@config/supabase.js";
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
-import type { SyncWorkoutTemplate } from "@features/sync/interfaces/http/types/sync-workout-template.type.js";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
