@@ -13,8 +13,8 @@ import type { DashboardRepository } from "@features/dashboard/domain/repositorie
 import { DashboardRepositorySupabase } from "@features/dashboard/infrastructure/repositories/dashboard.repository.supabase.js";
 import { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 import { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
-import { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use-cases/sync-workout-templates.usecase.js";
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import { SyncRepositoryPrisma } from "@features/sync/infrastructure/repositories/sync.repository.prisma.js";
 import { SyncRepositorySupabase } from "@features/sync/infrastructure/repositories/sync.repository.supabase.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
@@ -28,7 +28,7 @@ container.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthServiceSupabase);
 container.bind<AuthRepository>(TYPES.AUTH_REPOSITORY).to(AuthRepositorySupabase);
 container.bind<TokenService>(TYPES.TOKEN_SERVICE).to(TokenServiceSupabase);
 container.bind<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY).to(DashboardRepositorySupabase);
-container.bind<SyncRepository>(TYPES.SYNC_REPOSITORY).to(SyncRepositorySupabase);
+container.bind<SyncRepository>(TYPES.SYNC_REPOSITORY).to(SyncRepositoryPrisma);
 
 container.bind<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE).toDynamicValue(() => {
   return new SignInWithAppleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
@@ -60,10 +60,6 @@ container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamic
 
 container.bind<GetWorkoutTemplatesUseCase>(TYPES.GET_WORKOUT_TEMPLATES_USE_CASE).toDynamicValue(() => {
   return new GetWorkoutTemplatesUseCase(container.get<DashboardRepository>(TYPES.DASHBOARD_REPOSITORY));
-});
-
-container.bind<SyncWorkoutTemplatesUseCase>(TYPES.SYNC_WORKOUT_TEMPLATES_USE_CASE).toDynamicValue(() => {
-  return new SyncWorkoutTemplatesUseCase(container.get<SyncRepository>(TYPES.SYNC_REPOSITORY));
 });
 
 container.bind<CheckUserDeviceUseCase>(TYPES.CHECK_USER_DEVICE_USE_CASE).toDynamicValue(() => {
