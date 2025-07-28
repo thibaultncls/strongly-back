@@ -3,7 +3,6 @@ import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { RequestError } from "@hono/node-server";
 import { container } from "@config/inversify.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
-import type { SyncWorkoutTemplatesUseCase } from "@features/sync/application/use-cases/sync-workout-templates.usecase.js";
 import type { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 

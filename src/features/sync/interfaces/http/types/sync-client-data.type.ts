@@ -1,18 +1,18 @@
 export interface SyncClientData {
-  exercise_body_part: ExerciseBodyPart[];
-  exercise: Exercise[];
-  set: Set[];
-  set_intensity: SetIntensity[];
-  set_set_type: SetSetType[];
-  template_exercise: TemplateExercise[];
-  template_exercise_type: TemplateExerciseType[];
-  template_set: TemplateSet[];
-  template_set_type: TemplateSetType[];
-  user_subscription: UserSubscription[];
-  workout_exercise: WorkoutExercise[];
-  workout_exercise_type: WorkoutExerciseType[];
-  workout: Workout[];
-  workout_template: WorkoutTemplate[];
+  exercise_body_part?: ExerciseBodyPart[];
+  exercise?: Exercise[];
+  set?: Set[];
+  set_intensity?: SetIntensity[];
+  set_set_type?: SetSetType[];
+  template_exercise?: TemplateExercise[];
+  template_exercise_type?: TemplateExerciseType[];
+  template_set?: TemplateSet[];
+  template_set_type?: TemplateSetType[];
+  user_subscription?: UserSubscription[];
+  workout_exercise?: WorkoutExercise[];
+  workout_exercise_type?: WorkoutExerciseType[];
+  workout?: Workout[];
+  workout_template?: WorkoutTemplate[];
 }
 
 export interface ExerciseBodyPart {
