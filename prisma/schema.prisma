@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model body_part {
+  id                 BigInt               @id @default(autoincrement())
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  body_part          String               @unique @db.VarChar
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  is_deleted         Boolean              @default(false)
+  exercise_body_part exercise_body_part[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model exercise {
+  id                 BigInt               @id @default(autoincrement())
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  name               String               @unique @db.VarChar
+  description        String?
+  user_id            String?              @db.Uuid
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  is_deleted         Boolean              @default(false)
+  user               user?                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  exercise_body_part exercise_body_part[]
+  template_exercise  template_exercise[]
+  workout_exercise   workout_exercise[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model exercise_body_part {
+  exercise_id  BigInt
+  body_part_id BigInt
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime  @default(now()) @db.Timestamptz(6)
+  is_deleted   Boolean   @default(false)
+  body_part    body_part @relation(fields: [body_part_id], references: [id])
+  exercise     exercise  @relation(fields: [exercise_id], references: [id])
+
+  @@id([exercise_id, body_part_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model exercise_type {
+  id                     BigInt                   @id @default(autoincrement())
+  created_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  type                   String                   @unique @db.VarChar
+  updated_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  is_deleted             Boolean                  @default(false)
+  abbr                   String                   @unique
+  template_exercise_type template_exercise_type[]
+  workout_exercise_type  workout_exercise_type[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model intensity {
+  id            BigInt          @id @default(autoincrement())
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  name          String          @unique @db.VarChar
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6)
+  is_deleted    Boolean         @default(false)
+  set_intensity set_intensity[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model set {
+  id                  BigInt           @id @default(autoincrement())
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  workout_exercise_id BigInt
+  weight              BigInt
+  reps                BigInt
+  set_number          BigInt
+  note                String?
+  updated_at          DateTime         @default(now()) @db.Timestamptz(6)
+  is_deleted          Boolean          @default(false)
+  workout_exercise    workout_exercise @relation(fields: [workout_exercise_id], references: [id], onDelete: Cascade)
+  set_intensity       set_intensity[]
+  set_set_type        set_set_type[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model set_intensity {
+  set_id          BigInt
+  created_at      DateTime  @default(now()) @db.Timestamptz(6)
+  instensity_id   BigInt
+  intensity_level BigInt?
+  failure         Boolean
+  updated_at      DateTime  @default(now()) @db.Timestamptz(6)
+  is_deleted      Boolean   @default(false)
+  intensity       intensity @relation(fields: [instensity_id], references: [id])
+  set             set       @relation(fields: [set_id], references: [id], onDelete: Cascade)
+
+  @@id([set_id, instensity_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model set_set_type {
+  set_id      BigInt
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  set_type_id BigInt
+  set_group   BigInt
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  is_deleted  Boolean  @default(false)
+  set         set      @relation(fields: [set_id], references: [id], onDelete: Cascade)
+  set_type    set_type @relation(fields: [set_type_id], references: [id])
+
+  @@id([set_id, set_type_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model set_type {
+  id                BigInt              @id @default(autoincrement())
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  type              String              @unique
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  is_deleted        Boolean             @default(false)
+  abbr              String              @unique
+  set_set_type      set_set_type[]
+  template_set_type template_set_type[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model subscription {
+  id                BigInt              @id @default(autoincrement())
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  name              String
+  price             BigInt
+  duration          BigInt
+  prioriy           BigInt              @unique
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  is_deleted        Boolean             @default(false)
+  user_subscription user_subscription[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model template_exercise {
+  id                     BigInt                   @id @default(autoincrement())
+  created_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  template_id            BigInt
+  exercise_id            BigInt
+  set_up                 String?
+  order                  BigInt
+  updated_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  is_deleted             Boolean                  @default(false)
+  exercise               exercise                 @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  workout_template       workout_template         @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_exercise_type template_exercise_type[]
+  template_set           template_set[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model template_exercise_type {
+  template_exercise_id BigInt
+  created_at           DateTime          @default(now()) @db.Timestamptz(6)
+  exercise_type_id     BigInt
+  exercise_group       BigInt
+  updated_at           DateTime          @default(now()) @db.Timestamptz(6)
+  is_deleted           Boolean           @default(false)
+  exercise_type        exercise_type     @relation(fields: [exercise_type_id], references: [id])
+  template_exercise    template_exercise @relation(fields: [template_exercise_id], references: [id], onDelete: SetNull)
+
+  @@id([template_exercise_id, exercise_type_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model template_set {
+  id                   BigInt              @id @default(autoincrement())
+  created_at           DateTime            @default(now()) @db.Timestamptz(6)
+  template_exercise_id BigInt
+  low_rep              BigInt?
+  high_rep             BigInt?
+  set_number           BigInt?
+  updated_at           DateTime            @default(now()) @db.Timestamptz(6)
+  is_deleted           Boolean             @default(false)
+  template_exercise    template_exercise   @relation(fields: [template_exercise_id], references: [id], onDelete: Cascade)
+  template_set_type    template_set_type[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model template_set_type {
+  template_set_id BigInt
+  created_at      DateTime     @default(now()) @db.Timestamptz(6)
+  set_type_id     BigInt
+  set_group       BigInt
+  updated_at      DateTime     @default(now()) @db.Timestamptz(6)
+  is_deleted      Boolean      @default(false)
+  set_type        set_type     @relation(fields: [set_type_id], references: [id])
+  template_set    template_set @relation(fields: [template_set_id], references: [id], onDelete: Cascade)
+
+  @@id([template_set_id, set_type_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user {
+  id                String              @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  name              String?             @db.VarChar
+  email             String?             @unique
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  is_deleted        Boolean             @default(false)
+  device_id         String?             @unique @db.Uuid
+  exercise          exercise[]
+  user_subscription user_subscription[]
+  workout_template  workout_template[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_subscription {
+  id              BigInt       @id @default(autoincrement())
+  created_at      DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime     @default(now()) @db.Timestamptz(6)
+  user_id         String       @db.Uuid
+  subscription_id BigInt
+  beginning_date  DateTime     @db.Timestamptz(6)
+  end_date        DateTime?    @db.Timestamptz(6)
+  is_deleted      Boolean      @default(false)
+  subscription    subscription @relation(fields: [subscription_id], references: [id])
+  user            user         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model workout {
+  id                  BigInt             @id @default(autoincrement())
+  created_at          DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime           @default(now()) @db.Timestamptz(6)
+  workout_template_id BigInt
+  duration            DateTime           @db.Timestamptz(6)
+  note                String?
+  is_deleted          Boolean            @default(false)
+  workout_template    workout_template   @relation(fields: [workout_template_id], references: [id], onDelete: Cascade)
+  workout_exercise    workout_exercise[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model workout_exercise {
+  id                    BigInt                  @id @default(autoincrement())
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  workout_id            BigInt
+  exercise_id           BigInt
+  set_up                String?
+  order                 BigInt
+  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  is_deleted            Boolean                 @default(false)
+  set                   set[]
+  exercise              exercise                @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  workout               workout                 @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  workout_exercise_type workout_exercise_type[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model workout_exercise_type {
+  workout_exercise_id BigInt
+  created_at          DateTime         @default(now()) @db.Timestamptz(6)
+  exercise_type_id    BigInt
+  exercise_group      BigInt
+  updated_at          DateTime         @default(now()) @db.Timestamptz(6)
+  is_deleted          Boolean          @default(false)
+  exercise_type       exercise_type    @relation(fields: [exercise_type_id], references: [id])
+  workout_exercise    workout_exercise @relation(fields: [workout_exercise_id], references: [id], onDelete: SetNull)
+
+  @@id([workout_exercise_id, exercise_type_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model workout_template {
+  id                BigInt              @id @default(autoincrement())
+  user_id           String              @db.Uuid
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  name              String              @db.VarChar
+  order             BigInt?
+  is_deleted        Boolean             @default(false)
+  template_exercise template_exercise[]
+  workout           workout[]
+  user              user                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
