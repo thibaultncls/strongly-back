@@ -15,5 +15,5 @@ export interface SyncRepository {
 
 export interface IdAndUpdatedAt {
   id: number;
-  updated_at: string;
+  updated_at: Date;
 }
