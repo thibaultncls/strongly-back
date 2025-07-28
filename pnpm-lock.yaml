@@ -11,6 +11,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.14.4
         version: 1.14.4(hono@4.8.3)
+      '@hono/zod-validator':
+        specifier: ^0.7.2
+        version: 0.7.2(hono@4.8.3)(zod@4.0.10)
       '@supabase/supabase-js':
         specifier: ^2.50.2
         version: 2.50.2
@@ -197,6 +200,12 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hono/zod-validator@0.7.2':
+    resolution: {integrity: sha512-ub5eL/NeZ4eLZawu78JpW/J+dugDAYhwqUIdp9KYScI6PZECij4Hx4UsrthlEUutqDDhPwRI0MscUfNkvn/mqQ==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.25.0 || ^4.0.0
 
   '@inversifyjs/common@1.5.2':
     resolution: {integrity: sha512-WlzR9xGadABS9gtgZQ+luoZ8V6qm4Ii6RQfcfC9Ho2SOlE6ZuemFo7PKJvKI0ikm8cmKbU8hw5UK6E4qovH21w==}
@@ -516,6 +525,11 @@ snapshots:
   '@hono/node-server@1.14.4(hono@4.8.3)':
     dependencies:
       hono: 4.8.3
+
+  '@hono/zod-validator@0.7.2(hono@4.8.3)(zod@4.0.10)':
+    dependencies:
+      hono: 4.8.3
+      zod: 4.0.10
 
   '@inversifyjs/common@1.5.2': {}
 
