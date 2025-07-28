@@ -1,3 +1,5 @@
+import type { Exercise } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
+
 export interface SyncRepository {
   /**
    * Checks if a user with the specified user ID has the given device ID.
@@ -11,6 +13,7 @@ export interface SyncRepository {
   getNonSyncData(userId: string, lastSync: string): Promise<any>; // Placeholder for non-sync data method
   updateUserDeviceId(userId: string, deviceId: string): Promise<void>; // Placeholder for updating user device ID
   checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]>; // Placeholder for checking exercises to sync
+  syncExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Exercise[]): Promise<void>;
 }
 
 export interface IdAndUpdatedAt {
