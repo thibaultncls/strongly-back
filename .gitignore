@@ -28,3 +28,10 @@ lerna-debug.log*
 .DS_Store
 
 
+
+/src/generated/prisma
+.prettierrc
+strongly/sign-in-with-apple.bru
+strongly/sign-in-with-google.bru
+
+/src/generated/prisma
