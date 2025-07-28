@@ -4,43 +4,56 @@ import type { Exercise } from "@features/sync/interfaces/http/types/sync-client-
 
 export class SyncRepositoryPrisma implements SyncRepository {
   async syncExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Exercise[]): Promise<void> {
-    await prisma.$transaction(async (tx) => {
-      for (const exercise of data) {
-        const remoteExercise = remoteIdAndUpdatedAt.find((ex) => ex.id === exercise.id);
-        if (!remoteExercise && !exercise.is_deleted) {
-          // Create new exercise
-          await tx.exercise.create({
+    const operations = [];
+
+    for (const exercise of data) {
+      const remoteExercise = remoteIdAndUpdatedAt.find((item) => item.id === exercise.id);
+      const clientUpdatedAt = new Date(exercise.updated_at);
+
+      if (!remoteExercise && !exercise.is_deleted) {
+        // Créer
+        operations.push(
+          prisma.exercise.create({
             data: {
               id: exercise.id,
               name: exercise.name,
-              user_id: exercise.user_id,
               description: exercise.description,
+              user_id: exercise.user_id,
               is_deleted: exercise.is_deleted,
               created_at: new Date(exercise.created_at),
-              updated_at: new Date(exercise.updated_at),
+              updated_at: clientUpdatedAt,
             },
-          });
-        } else if (remoteExercise && new Date(exercise.updated_at) > remoteExercise.updated_at) {
-          // Update existing exercise
-          await tx.exercise.update({
+          })
+        );
+      } else if (remoteExercise && clientUpdatedAt > remoteExercise.updated_at && !exercise.is_deleted) {
+        // Mettre à jour
+        operations.push(
+          prisma.exercise.update({
             where: { id: exercise.id },
             data: {
               name: exercise.name,
-              user_id: exercise.user_id,
               description: exercise.description,
-              is_deleted: exercise.is_deleted,
-              updated_at: new Date(exercise.updated_at),
+              user_id: exercise.user_id,
+              is_deleted: false,
+              updated_at: clientUpdatedAt,
             },
-          });
-        } else if (exercise.is_deleted) {
-          // Mark as deleted
-          await tx.exercise.update({
+          })
+        );
+      } else if (exercise.is_deleted && remoteExercise && clientUpdatedAt > remoteExercise.updated_at) {
+        // Supprimer (logique) si suppression plus récente
+        operations.push(
+          prisma.exercise.update({
             where: { id: exercise.id },
-            data: { is_deleted: true, updated_at: new Date() },
-          });
-        }
+            data: {
+              is_deleted: true,
+              updated_at: clientUpdatedAt,
+            },
+          })
+        );
       }
-    });
+    }
+
+    await prisma.$transaction(operations);
   }
 
   async checkUserDeviceId(userId: string, deviceId: string): Promise<boolean> {
@@ -54,18 +67,21 @@ export class SyncRepositoryPrisma implements SyncRepository {
 
     return !!userDevice;
   }
+
   async getNonSyncData(userId: string, lastSync: string): Promise<any> {
     const nonSyncData = await prisma.$queryRaw`
   SELECT * FROM get_user_data(${userId}::uuid, ${lastSync}::timestamp);
 `;
     return nonSyncData;
   }
+
   async updateUserDeviceId(userId: string, deviceId: string): Promise<void> {
     await prisma.user.update({
       where: { id: userId },
       data: { device_id: deviceId },
     });
   }
+
   async checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]> {
     const exercises = await prisma.exercise.findMany({
       where: { id: { in: exercisesIds } },

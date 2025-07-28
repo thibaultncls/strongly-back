@@ -15,7 +15,6 @@ import { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/che
 import { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import { SyncRepositoryPrisma } from "@features/sync/infrastructure/repositories/sync.repository.prisma.js";
-import { SyncRepositorySupabase } from "@features/sync/infrastructure/repositories/sync.repository.supabase.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { TokenServiceSupabase } from "@shared/infrastructure/token.service.supabase.js";
