@@ -1,4 +1,4 @@
-import type { Exercise } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
+import type { Exercise, Workout, WorkoutTemplate } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 
 export interface SyncRepository {
   /**
@@ -14,6 +14,8 @@ export interface SyncRepository {
   updateUserDeviceId(userId: string, deviceId: string): Promise<void>; // Placeholder for updating user device ID
   checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]>; // Placeholder for checking exercises to sync
   syncExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Exercise[]): Promise<void>;
+  checkWorkoutTemplatesToSync(workoutTemplateIds: number[]): Promise<IdAndUpdatedAt[]>;
+  syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void>;
 }
 
 export interface IdAndUpdatedAt {
