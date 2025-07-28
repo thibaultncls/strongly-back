@@ -1,8 +1,23 @@
 import { supabase } from "@config/supabase.js";
-import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import type { IdAndUpdatedAt, SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositorySupabase implements SyncRepository {
+  async checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]> {
+    const { data, error } = await supabase.from("exercise").select("id, updated_at").in("id", exercisesIds);
+
+    if (error) {
+      throw new RequestError(`Error checking exercises to sync: ${error.message}`);
+    }
+
+    return data.map((exercise) => {
+      return {
+        id: exercise.id,
+        updated_at: exercise.updated_at,
+      };
+    });
+  }
+
   async updateUserDeviceId(userId: string, deviceId: string): Promise<void> {
     const { error } = await supabase.from("user").update({ device_id: deviceId }).eq("id", userId);
     if (error) {
