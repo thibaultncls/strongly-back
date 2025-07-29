@@ -15,4 +15,5 @@ export const TYPES = {
   SYNC_WORKOUT_TEMPLATES_USE_CASE: Symbol.for("SyncWorkoutTemplatesUseCase"),
   CHECK_USER_DEVICE_USE_CASE: Symbol.for("CheckUserDeviceUseCase"),
   GET_NON_SYNC_DATA_USE_CASE: Symbol.for("GetNonSyncDataUseCase"),
+  SYNC_CLIENT_DATA_USE_CASE: Symbol.for("SyncClientDataUseCase"),
 };

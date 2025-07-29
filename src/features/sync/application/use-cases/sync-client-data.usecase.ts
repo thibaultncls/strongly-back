@@ -1,7 +1,6 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
-import { da } from "zod/locales";
 
 export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository) {}
@@ -160,6 +159,7 @@ export class SyncClientDataUseCase {
         user_id: us.user_id,
         subscription_id: us.subscription_id,
       }));
+
       const userSubscriptionsToSync = await this.syncRepository.checkUserSubscriptionsToSync(
         userSubscriptionIds.map((us) => us.id),
         userSubscriptionIds.map((us) => us.user_id),
