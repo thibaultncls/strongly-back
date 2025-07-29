@@ -1181,10 +1181,10 @@ export class SyncRepositoryPrisma implements SyncRepository {
   }
 
   async getNonSyncData(userId: string, lastSync: string): Promise<any> {
-    const nonSyncData = await prisma.$queryRaw`
-  SELECT * FROM get_user_data(${userId}::uuid, ${lastSync}::timestamp);
-`;
-    return nonSyncData;
+    const nonSyncData = (await prisma.$queryRaw`
+      SELECT get_user_data(${userId}::uuid, ${lastSync}::timestamp);
+    `) as any[];
+    return nonSyncData[0]?.get_user_data || null;
   }
 
   async updateUserDeviceId(userId: string, deviceId: string): Promise<void> {
