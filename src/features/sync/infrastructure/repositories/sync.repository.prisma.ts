@@ -1,20 +1,506 @@
 import { prisma } from "@config/prisma.js";
-import type { IdAndUpdatedAt, SetIntensityIds, SetSetTypeIds, SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import type {
+  ExerciseBodyPartIds,
+  IdAndUpdatedAt,
+  SetIntensityIds,
+  SetSetTypeIds,
+  SyncRepository,
+  TemplateExerciseTypeIds,
+  TemplateSetTypeIds,
+  UserSubscriptionIds,
+  WorkoutExerciseTypeIds,
+} from "@features/sync/domain/repositories/sync.repository.js";
 import type {
   Exercise,
+  ExerciseBodyPart,
   Set,
   SetIntensity,
   SetSetType,
   TemplateExercise,
+  TemplateExerciseType,
   TemplateSet,
+  TemplateSetType,
+  UserSubscription,
   Workout,
   WorkoutExercise,
+  WorkoutExerciseType,
   WorkoutTemplate,
 } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 import { Prisma } from "@prisma/client";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositoryPrisma implements SyncRepository {
+  async checkWorkoutExerciseTypesToSync(workoutExerciseIds: number[], exerciseTypeIds: number[]): Promise<WorkoutExerciseTypeIds[]> {
+    try {
+      const workoutExerciseTypes = await prisma.workout_exercise_type.findMany({
+        where: { workout_exercise_id: { in: workoutExerciseIds }, exercise_type_id: { in: exerciseTypeIds } },
+        select: { workout_exercise_id: true, exercise_type_id: true, updated_at: true },
+      });
+
+      return workoutExerciseTypes.map((workoutExerciseType) => ({
+        workout_exercise_id: Number(workoutExerciseType.workout_exercise_id),
+        exercise_type_id: Number(workoutExerciseType.exercise_type_id),
+        updated_at: workoutExerciseType.updated_at,
+      }));
+    } catch (error: any) {
+      console.error("Error checking workout exercise types to sync:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to check workout exercise types: ${error.message}`);
+      }
+      throw new RequestError("Failed to check workout exercise types");
+    }
+  }
+
+  async syncWorkoutExerciseTypes(remoteIdAndUpdatedAt: WorkoutExerciseTypeIds[], data: WorkoutExerciseType[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const workoutExerciseType of data) {
+        const remoteWorkoutExerciseType = remoteIdAndUpdatedAt.find(
+          (item) =>
+            item.workout_exercise_id === workoutExerciseType.workout_exercise_id &&
+            item.exercise_type_id === workoutExerciseType.exercise_type_id
+        );
+        const clientUpdatedAt = new Date(workoutExerciseType.updated_at);
+
+        if (!remoteWorkoutExerciseType && !workoutExerciseType.is_deleted) {
+          // Create
+          operations.push(
+            prisma.workout_exercise_type.create({
+              data: {
+                workout_exercise_id: workoutExerciseType.workout_exercise_id,
+                exercise_type_id: workoutExerciseType.exercise_type_id,
+                exercise_group: workoutExerciseType.exercise_group,
+                is_deleted: workoutExerciseType.is_deleted,
+                created_at: new Date(workoutExerciseType.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (remoteWorkoutExerciseType && clientUpdatedAt > remoteWorkoutExerciseType.updated_at && !workoutExerciseType.is_deleted) {
+          // Update
+          operations.push(
+            prisma.workout_exercise_type.update({
+              where: {
+                workout_exercise_id_exercise_type_id: {
+                  workout_exercise_id: workoutExerciseType.workout_exercise_id,
+                  exercise_type_id: workoutExerciseType.exercise_type_id,
+                },
+              },
+              data: {
+                exercise_group: workoutExerciseType.exercise_group,
+                is_deleted: false,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (workoutExerciseType.is_deleted && remoteWorkoutExerciseType && clientUpdatedAt > remoteWorkoutExerciseType.updated_at) {
+          // Soft delete if deletion is more recent
+          operations.push(
+            prisma.workout_exercise_type.update({
+              where: {
+                workout_exercise_id_exercise_type_id: {
+                  workout_exercise_id: workoutExerciseType.workout_exercise_id,
+                  exercise_type_id: workoutExerciseType.exercise_type_id,
+                },
+              },
+              data: {
+                is_deleted: true,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+    } catch (error: any) {
+      console.error("Error syncing workout exercise types:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to sync workout exercise types: ${error.message}`);
+      }
+      throw new RequestError("Failed to sync workout exercise types");
+    }
+  }
+
+  async checkExerciseBodyPartsToSync(exerciseIds: number[], bodyPartIds: number[]): Promise<ExerciseBodyPartIds[]> {
+    try {
+      const exerciseBodyParts = await prisma.exercise_body_part.findMany({
+        where: {
+          exercise_id: { in: exerciseIds },
+          body_part_id: { in: bodyPartIds },
+        },
+        select: { exercise_id: true, body_part_id: true, updated_at: true },
+      });
+
+      return exerciseBodyParts.map((exerciseBodyPart) => ({
+        exercise_id: Number(exerciseBodyPart.exercise_id),
+        body_part_id: Number(exerciseBodyPart.body_part_id),
+        updated_at: exerciseBodyPart.updated_at,
+      }));
+    } catch (error: any) {
+      console.error("Error checking exercise body parts to sync:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to check exercise body parts: ${error.message}`);
+      }
+      throw new RequestError("Failed to check exercise body parts");
+    }
+  }
+
+  async syncExerciseBodyParts(remoteIdAndUpdatedAt: ExerciseBodyPartIds[], data: ExerciseBodyPart[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const exerciseBodyPart of data) {
+        const remoteExerciseBodyPart = remoteIdAndUpdatedAt.find(
+          (item) => item.exercise_id === exerciseBodyPart.exercise_id && item.body_part_id === exerciseBodyPart.body_part_id
+        );
+        const clientUpdatedAt = new Date(exerciseBodyPart.updated_at);
+
+        if (!remoteExerciseBodyPart && !exerciseBodyPart.is_deleted) {
+          // Create
+          operations.push(
+            prisma.exercise_body_part.create({
+              data: {
+                exercise_id: exerciseBodyPart.exercise_id,
+                body_part_id: exerciseBodyPart.body_part_id,
+                created_at: new Date(exerciseBodyPart.created_at),
+                updated_at: clientUpdatedAt,
+                is_deleted: exerciseBodyPart.is_deleted,
+              },
+            })
+          );
+        } else if (remoteExerciseBodyPart && clientUpdatedAt > remoteExerciseBodyPart.updated_at && !exerciseBodyPart.is_deleted) {
+          // Update
+          operations.push(
+            prisma.exercise_body_part.update({
+              where: {
+                exercise_id_body_part_id: {
+                  exercise_id: exerciseBodyPart.exercise_id,
+                  body_part_id: exerciseBodyPart.body_part_id,
+                },
+              },
+              data: {
+                updated_at: clientUpdatedAt,
+                is_deleted: false,
+              },
+            })
+          );
+        } else if (exerciseBodyPart.is_deleted && remoteExerciseBodyPart && clientUpdatedAt > remoteExerciseBodyPart.updated_at) {
+          // Soft delete if deletion is more recent
+          operations.push(
+            prisma.exercise_body_part.update({
+              where: {
+                exercise_id_body_part_id: {
+                  exercise_id: exerciseBodyPart.exercise_id,
+                  body_part_id: exerciseBodyPart.body_part_id,
+                },
+              },
+              data: {
+                is_deleted: true,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+
+      await prisma.$transaction(operations);
+    } catch (error: any) {
+      console.error("Error syncing exercise body parts:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to sync exercise body parts: ${error.message}`);
+      }
+      throw new RequestError("Failed to sync exercise body parts");
+    }
+  }
+
+  async checkUserSubscriptionsToSync(ids: number[], userIds: string[], subscriptionIds: number[]): Promise<UserSubscriptionIds[]> {
+    try {
+      const userSubscriptions = await prisma.user_subscription.findMany({
+        where: {
+          id: { in: ids },
+          user_id: { in: userIds },
+          subscription_id: { in: subscriptionIds },
+        },
+        select: { user_id: true, subscription_id: true, updated_at: true, id: true },
+      });
+
+      return userSubscriptions.map((userSubscription) => ({
+        id: Number(userSubscription.id),
+        user_id: userSubscription.user_id,
+        subscription_id: Number(userSubscription.subscription_id),
+        updated_at: userSubscription.updated_at,
+      }));
+    } catch (error: any) {
+      console.error("Error checking user subscriptions to sync:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to check user subscriptions: ${error.message}`);
+      }
+      throw new RequestError("Failed to check user subscriptions");
+    }
+  }
+
+  async syncUserSubscriptions(remoteIdAndUpdatedAt: UserSubscriptionIds[], data: UserSubscription[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const userSubscription of data) {
+        const remoteUserSubscription = remoteIdAndUpdatedAt.find(
+          (item) => item.user_id === userSubscription.user_id && item.subscription_id === userSubscription.subscription_id
+        );
+        const clientUpdatedAt = new Date(userSubscription.updated_at);
+
+        if (!remoteUserSubscription && !userSubscription.is_deleted) {
+          // Create
+          operations.push(
+            prisma.user_subscription.create({
+              data: {
+                id: userSubscription.id,
+                beginning_date: new Date(userSubscription.beginning_date),
+                end_date: new Date(userSubscription.end_date),
+                user_id: userSubscription.user_id,
+                subscription_id: userSubscription.subscription_id,
+                is_deleted: userSubscription.is_deleted,
+                created_at: new Date(userSubscription.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (remoteUserSubscription && clientUpdatedAt > remoteUserSubscription.updated_at && !userSubscription.is_deleted) {
+          // Update
+          operations.push(
+            prisma.user_subscription.update({
+              where: {
+                id: remoteUserSubscription.id, // Assuming id is the primary key
+              },
+              data: {
+                beginning_date: new Date(userSubscription.beginning_date),
+                end_date: new Date(userSubscription.end_date),
+                user_id: userSubscription.user_id,
+                subscription_id: userSubscription.subscription_id,
+                created_at: new Date(userSubscription.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (remoteUserSubscription && clientUpdatedAt > remoteUserSubscription.updated_at && !userSubscription.is_deleted) {
+          // Update
+          operations.push(
+            prisma.user_subscription.update({
+              where: {
+                id: remoteUserSubscription.id, // Assuming id is the primary key
+              },
+              data: {
+                beginning_date: new Date(userSubscription.beginning_date),
+                end_date: new Date(userSubscription.end_date),
+                user_id: userSubscription.user_id,
+                subscription_id: userSubscription.subscription_id,
+                created_at: new Date(userSubscription.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+
+      await prisma.$transaction(operations);
+    } catch (error: any) {
+      console.error("Error syncing user subscriptions:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to sync user subscriptions: ${error.message}`);
+      }
+      throw new RequestError("Failed to sync user subscriptions");
+    }
+  }
+  async checkTemplateSetTypesToSync(templateSetIds: number[], setTypeIds: number[]): Promise<TemplateSetTypeIds[]> {
+    try {
+      const templateSetTypes = await prisma.template_set_type.findMany({
+        where: { template_set_id: { in: templateSetIds }, set_type_id: { in: setTypeIds } },
+        select: { template_set_id: true, set_type_id: true, updated_at: true },
+      });
+
+      return templateSetTypes.map((templateSetType) => ({
+        template_set_id: Number(templateSetType.template_set_id),
+        set_type_id: Number(templateSetType.set_type_id),
+        updated_at: templateSetType.updated_at,
+      }));
+    } catch (error: any) {
+      console.error("Error checking template set types to sync:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to check template set types: ${error.message}`);
+      }
+      throw new RequestError("Failed to check template set types");
+    }
+  }
+
+  async syncTemplateSetTypes(remoteIdAndUpdatedAt: TemplateSetTypeIds[], data: TemplateSetType[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const templateSetType of data) {
+        const remoteTemplateSetType = remoteIdAndUpdatedAt.find(
+          (item) => item.template_set_id === templateSetType.template_set_id && item.set_type_id === templateSetType.set_type_id
+        );
+        const clientUpdatedAt = new Date(templateSetType.updated_at);
+        if (!remoteTemplateSetType && !templateSetType.is_deleted) {
+          // Create
+          operations.push(
+            prisma.template_set_type.create({
+              data: {
+                template_set_id: templateSetType.template_set_id,
+                set_type_id: templateSetType.set_type_id,
+                set_group: templateSetType.set_group,
+                is_deleted: templateSetType.is_deleted,
+                created_at: new Date(templateSetType.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (remoteTemplateSetType && clientUpdatedAt > remoteTemplateSetType.updated_at && !templateSetType.is_deleted) {
+          // Update
+          operations.push(
+            prisma.template_set_type.update({
+              where: {
+                template_set_id_set_type_id: {
+                  template_set_id: templateSetType.template_set_id,
+                  set_type_id: templateSetType.set_type_id,
+                },
+              },
+              data: {
+                set_group: templateSetType.set_group,
+                updated_at: clientUpdatedAt,
+                is_deleted: false,
+              },
+            })
+          );
+        } else if (templateSetType.is_deleted && remoteTemplateSetType) {
+          // Soft delete
+          operations.push(
+            prisma.template_set_type.update({
+              where: {
+                template_set_id_set_type_id: {
+                  template_set_id: templateSetType.template_set_id,
+                  set_type_id: templateSetType.set_type_id,
+                },
+              },
+              data: {
+                is_deleted: true,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+
+      await Promise.all(operations);
+    } catch (error: any) {
+      console.error("Error syncing template set types:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to sync template set types: ${error.message}`);
+      }
+      throw new RequestError("Failed to sync template set types");
+    }
+  }
+
+  async checkTemplateExerciseTypesToSync(templateExerciseIds: number[], exerciseTypeIds: number[]): Promise<TemplateExerciseTypeIds[]> {
+    try {
+      const templateExerciseTypes = await prisma.template_exercise_type.findMany({
+        where: { template_exercise_id: { in: templateExerciseIds }, exercise_type_id: { in: exerciseTypeIds } },
+        select: { template_exercise_id: true, exercise_type_id: true, updated_at: true },
+      });
+
+      return templateExerciseTypes.map((templateExerciseType) => ({
+        template_exercise_id: Number(templateExerciseType.template_exercise_id),
+        exercise_type_id: Number(templateExerciseType.exercise_type_id),
+        updated_at: templateExerciseType.updated_at,
+      }));
+    } catch (error: any) {
+      console.error("Error checking template exercise types to sync:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to check template exercise types: ${error.message}`);
+      }
+      throw new RequestError("Failed to check template exercise types");
+    }
+  }
+
+  async syncTemplateExerciseTypes(remoteIdAndUpdatedAt: TemplateExerciseTypeIds[], data: TemplateExerciseType[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const templateExerciseType of data) {
+        const remoteTemplateExerciseType = remoteIdAndUpdatedAt.find(
+          (item) =>
+            item.template_exercise_id === templateExerciseType.template_exercise_id &&
+            item.exercise_type_id === templateExerciseType.exercise_type_id
+        );
+        const clientUpdatedAt = new Date(templateExerciseType.updated_at);
+        if (!remoteTemplateExerciseType && !templateExerciseType.is_deleted) {
+          // Create
+          operations.push(
+            prisma.template_exercise_type.create({
+              data: {
+                template_exercise_id: templateExerciseType.template_exercise_id,
+                exercise_type_id: templateExerciseType.exercise_type_id,
+                exercise_group: templateExerciseType.exercise_group,
+                is_deleted: templateExerciseType.is_deleted,
+                created_at: new Date(templateExerciseType.created_at),
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (
+          remoteTemplateExerciseType &&
+          clientUpdatedAt > remoteTemplateExerciseType.updated_at &&
+          !templateExerciseType.is_deleted
+        ) {
+          // Update
+          operations.push(
+            prisma.template_exercise_type.update({
+              where: {
+                template_exercise_id_exercise_type_id: {
+                  template_exercise_id: templateExerciseType.template_exercise_id,
+                  exercise_type_id: templateExerciseType.exercise_type_id,
+                },
+              },
+              data: {
+                exercise_group: templateExerciseType.exercise_group,
+                is_deleted: false,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        } else if (
+          templateExerciseType.is_deleted &&
+          remoteTemplateExerciseType &&
+          clientUpdatedAt > remoteTemplateExerciseType.updated_at
+        ) {
+          // Soft delete if deletion is more recent
+          operations.push(
+            prisma.template_exercise_type.update({
+              where: {
+                template_exercise_id_exercise_type_id: {
+                  template_exercise_id: templateExerciseType.template_exercise_id,
+                  exercise_type_id: templateExerciseType.exercise_type_id,
+                },
+              },
+              data: {
+                is_deleted: true,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+
+      await prisma.$transaction(operations);
+    } catch (error: any) {
+      console.error("Error syncing template exercise types:", error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new RequestError(`Failed to sync template exercise types: ${error.message}`);
+      }
+      throw new RequestError("Failed to sync template exercise types");
+    }
+  }
+
   async checkSetSetTypesToSync(setIds: number[], setTypeIds: number[]): Promise<SetSetTypeIds[]> {
     try {
       const setSetTypes = await prisma.set_set_type.findMany({

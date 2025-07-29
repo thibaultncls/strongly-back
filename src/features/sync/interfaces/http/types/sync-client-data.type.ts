@@ -110,7 +110,7 @@ export interface UserSubscription {
   subscription_id: number;
   beginning_date: string;
   end_date: string;
-  is_active: boolean;
+  is_deleted: boolean;
   created_at: string;
   updated_at: string;
 }
