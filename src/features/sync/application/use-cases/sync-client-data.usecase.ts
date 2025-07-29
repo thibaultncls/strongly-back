@@ -1,11 +1,16 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
+import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { da } from "zod/locales";
 
 export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository) {}
 
   async execute(data: SyncClientData) {
+    if (!data || Object.keys(data).length === 0) {
+      throw new InvalidArgumentsError("No data to sync");
+    }
+
     // Handle Exercises
     if (data.exercise && data.exercise.length > 0) {
       const exercisesId = data.exercise.map((exercise) => exercise.id);

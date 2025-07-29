@@ -70,6 +70,9 @@ export interface TemplateExercise {
   exercise_id: number;
   order: number;
   set_up?: string;
+  is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface TemplateExerciseType {
