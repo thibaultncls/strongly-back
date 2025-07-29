@@ -1,8 +1,12 @@
 import type {
   Exercise,
+  Set,
+  SetIntensity,
+  SetSetType,
   TemplateExercise,
   TemplateSet,
   Workout,
+  WorkoutExercise,
   WorkoutTemplate,
 } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 
@@ -38,9 +42,37 @@ export interface SyncRepository {
   // Sync methods for workouts
   checkWorkoutsToSync(workoutIds: number[]): Promise<IdAndUpdatedAt[]>;
   syncWorkouts(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Workout[]): Promise<void>;
+
+  // Sync methods for workout exercises
+  checkWorkoutExercisesToSync(workoutExerciseIds: number[]): Promise<IdAndUpdatedAt[]>;
+  syncWorkoutExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutExercise[]): Promise<void>;
+
+  // Sync methods for sets
+  checkSetsToSync(setIds: number[]): Promise<IdAndUpdatedAt[]>;
+  syncSets(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Set[]): Promise<void>;
+
+  // Sync methods for set intensities
+  checkSetIntensitiesToSync(setIds: number[], intensityIds: number[]): Promise<SetIntensityIds[]>;
+  syncSetIntensities(remoteIdAndUpdatedAt: SetIntensityIds[], data: SetIntensity[]): Promise<void>;
+
+  // Sync methods for set set types
+  checkSetSetTypesToSync(setIds: number[], setTypeIds: number[]): Promise<SetSetTypeIds[]>;
+  syncSetSetTypes(remoteIdAndUpdatedAt: SetSetTypeIds[], data: SetSetType[]): Promise<void>;
 }
 
 export interface IdAndUpdatedAt {
   id: number;
+  updated_at: Date;
+}
+
+export interface SetIntensityIds {
+  set_id: number;
+  intensity_id: number;
+  updated_at: Date;
+}
+
+export interface SetSetTypeIds {
+  set_id: number;
+  set_type_id: number;
   updated_at: Date;
 }
