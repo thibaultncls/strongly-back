@@ -6,9 +6,7 @@ export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository) {}
 
   async execute(data: SyncClientData) {
-    if (!data || Object.keys(data).length === 0) {
-      throw new InvalidArgumentsError("No data to sync");
-    }
+    console.log("Syncing client data:", data);
 
     await this.handleExercises(data);
     await this.handleExerciseBodyParts(data);

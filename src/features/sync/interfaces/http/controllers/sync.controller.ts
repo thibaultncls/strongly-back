@@ -32,6 +32,8 @@ export async function getNonSyncData(c: Context) {
   const { lastSync, deviceId } = await c.req.json();
 
   try {
+    console.log("Fetching non-sync data for user:", userId, "lastSync:", lastSync, "deviceId:", deviceId);
+
     const nonSyncData = await container.get<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).execute(userId, lastSync, deviceId);
     return c.json({ nonSyncData });
   } catch (error: any) {
