@@ -1049,8 +1049,11 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void> {
     try {
       const operations = [];
+      console.log("Syncing workout templates:", data.length, "items");
 
       for (const workout of data) {
+        console.log("Processing workout template:", workout.id, workout.updated_at);
+
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
 

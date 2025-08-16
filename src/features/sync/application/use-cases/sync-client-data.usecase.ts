@@ -1,6 +1,5 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
-import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 
 export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository) {}
