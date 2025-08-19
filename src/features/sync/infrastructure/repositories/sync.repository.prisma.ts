@@ -646,6 +646,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.set.create({
               data: {
                 id: set.id,
+                template_set_id: set.template_set_id,
                 workout_exercise_id: set.workout_exercise_id,
                 reps: set.reps,
                 weight: set.weight,
@@ -663,6 +664,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.set.update({
               where: { id: set.id },
               data: {
+                template_set_id: set.template_set_id,
                 workout_exercise_id: set.workout_exercise_id,
                 reps: set.reps,
                 weight: set.weight,

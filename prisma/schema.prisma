@@ -78,6 +78,8 @@ model set {
   note                String?
   updated_at          DateTime         @default(now()) @db.Timestamptz(6)
   is_deleted          Boolean          @default(false)
+  template_set_id     BigInt?
+  template_set        template_set?    @relation(fields: [template_set_id], references: [id])
   workout_exercise    workout_exercise @relation(fields: [workout_exercise_id], references: [id], onDelete: Cascade)
   set_intensity       set_intensity[]
   set_set_type        set_set_type[]
@@ -177,6 +179,7 @@ model template_set {
   set_number           BigInt?
   updated_at           DateTime            @default(now()) @db.Timestamptz(6)
   is_deleted           Boolean             @default(false)
+  set                  set[]
   template_exercise    template_exercise   @relation(fields: [template_exercise_id], references: [id], onDelete: Cascade)
   template_set_type    template_set_type[]
 }

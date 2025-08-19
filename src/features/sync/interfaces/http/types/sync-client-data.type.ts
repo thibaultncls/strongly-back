@@ -46,6 +46,7 @@ export interface SetIntensity {
 export interface Set {
   id: number;
   workout_exercise_id: number;
+  template_set_id?: number;
   reps: number;
   weight: number;
   set_number: number;
