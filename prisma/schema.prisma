@@ -232,7 +232,7 @@ model workout {
   created_at          DateTime           @default(now()) @db.Timestamptz(6)
   updated_at          DateTime           @default(now()) @db.Timestamptz(6)
   workout_template_id BigInt
-  duration            DateTime           @db.Timestamptz(6)
+  duration            BigInt
   note                String?
   is_deleted          Boolean            @default(false)
   workout_template    workout_template   @relation(fields: [workout_template_id], references: [id], onDelete: Cascade)

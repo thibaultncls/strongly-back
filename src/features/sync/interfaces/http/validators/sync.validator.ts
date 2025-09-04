@@ -120,7 +120,7 @@ const WorkoutExerciseTypeSchema = z.object({
 const WorkoutSchema = z.object({
   id: z.number(),
   workout_template_id: z.number(),
-  duration: z.string(),
+  duration: z.int(),
   note: z.string().nullable(),
   is_deleted: z.boolean(),
   created_at: z.string(),

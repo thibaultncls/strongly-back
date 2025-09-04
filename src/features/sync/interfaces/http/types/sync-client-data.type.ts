@@ -139,7 +139,7 @@ export interface WorkoutExerciseType {
 export interface Workout {
   id: number;
   workout_template_id: number;
-  duration: string;
+  duration: number;
   note?: string;
   is_deleted: boolean;
   created_at: string;
