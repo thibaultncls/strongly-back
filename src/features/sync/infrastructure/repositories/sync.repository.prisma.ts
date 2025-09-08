@@ -63,7 +63,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         );
         const clientUpdatedAt = new Date(workoutExerciseType.updated_at);
 
-        if (!remoteWorkoutExerciseType && !workoutExerciseType.is_deleted) {
+        if (!remoteWorkoutExerciseType) {
           // Create
           operations.push(
             prisma.workout_exercise_type.create({
@@ -155,7 +155,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         );
         const clientUpdatedAt = new Date(exerciseBodyPart.updated_at);
 
-        if (!remoteExerciseBodyPart && !exerciseBodyPart.is_deleted) {
+        if (!remoteExerciseBodyPart) {
           // Create
           operations.push(
             prisma.exercise_body_part.create({
@@ -249,7 +249,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         );
         const clientUpdatedAt = new Date(userSubscription.updated_at);
 
-        if (!remoteUserSubscription && !userSubscription.is_deleted) {
+        if (!remoteUserSubscription) {
           // Create
           operations.push(
             prisma.user_subscription.create({
@@ -341,7 +341,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           (item) => item.template_set_id === templateSetType.template_set_id && item.set_type_id === templateSetType.set_type_id
         );
         const clientUpdatedAt = new Date(templateSetType.updated_at);
-        if (!remoteTemplateSetType && !templateSetType.is_deleted) {
+        if (!remoteTemplateSetType) {
           // Create
           operations.push(
             prisma.template_set_type.create({
@@ -433,7 +433,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             item.exercise_type_id === templateExerciseType.exercise_type_id
         );
         const clientUpdatedAt = new Date(templateExerciseType.updated_at);
-        if (!remoteTemplateExerciseType && !templateExerciseType.is_deleted) {
+        if (!remoteTemplateExerciseType) {
           // Create
           operations.push(
             prisma.template_exercise_type.create({
@@ -560,7 +560,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         );
         const clientUpdatedAt = new Date(setIntensity.updated_at);
 
-        if (!remoteSetIntensity && !setIntensity.is_deleted) {
+        if (!remoteSetIntensity) {
           // Create
           operations.push(
             prisma.set_intensity.create({
@@ -640,7 +640,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteSet = remoteIdAndUpdatedAt.find((item) => item.id === set.id);
         const clientUpdatedAt = new Date(set.updated_at);
 
-        if (!remoteSet && !set.is_deleted) {
+        if (!remoteSet) {
           // Create
           operations.push(
             prisma.set.create({
@@ -727,7 +727,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteWorkoutExercise = remoteIdAndUpdatedAt.find((item) => item.id === workoutExercise.id);
         const clientUpdatedAt = new Date(workoutExercise.updated_at);
 
-        if (!remoteWorkoutExercise && !workoutExercise.is_deleted) {
+        if (!remoteWorkoutExercise) {
           // Create
           operations.push(
             prisma.workout_exercise.create({
@@ -810,7 +810,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
 
-        if (!remoteWorkout && !workout.is_deleted) {
+        if (!remoteWorkout) {
           // Créer
           operations.push(
             prisma.workout.create({
@@ -891,7 +891,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteTemplateExercise = remoteIdAndUpdatedAt.find((item) => item.id === templateExercise.id);
         const clientUpdatedAt = new Date(templateExercise.updated_at);
 
-        if (!remoteTemplateExercise && !templateExercise.is_deleted) {
+        if (!remoteTemplateExercise) {
           // Créer
           operations.push(
             prisma.template_exercise.create({
@@ -973,7 +973,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteTemplateSet = remoteIdAndUpdatedAt.find((item) => item.id === templateSet.id);
         const clientUpdatedAt = new Date(templateSet.updated_at);
 
-        if (!remoteTemplateSet && !templateSet.is_deleted) {
+        if (!remoteTemplateSet) {
           // Créer
           operations.push(
             prisma.template_set.create({
@@ -1051,15 +1051,12 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void> {
     try {
       const operations = [];
-      console.log("Syncing workout templates:", data.length, "items");
 
       for (const workout of data) {
-        console.log("Processing workout template:", workout.id, workout.updated_at);
-
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
 
-        if (!remoteWorkout && !workout.is_deleted) {
+        if (!remoteWorkout) {
           // Créer
           operations.push(
             prisma.workout_template.create({
@@ -1120,7 +1117,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteExercise = remoteIdAndUpdatedAt.find((item) => item.id === exercise.id);
         const clientUpdatedAt = new Date(exercise.updated_at);
 
-        if (!remoteExercise && !exercise.is_deleted) {
+        if (!remoteExercise) {
           // Créer
           operations.push(
             prisma.exercise.create({

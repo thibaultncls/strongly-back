@@ -5,8 +5,6 @@ export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository) {}
 
   async execute(data: SyncClientData) {
-    console.log("Syncing client data:", data);
-
     await this.handleExercises(data);
     await this.handleExerciseBodyParts(data);
     await this.handleWorkoutTemplates(data);
