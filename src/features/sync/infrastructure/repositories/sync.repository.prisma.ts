@@ -30,7 +30,7 @@ import { Prisma } from "@prisma/client";
 import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncRepositoryPrisma implements SyncRepository {
-  async checkWorkoutExerciseTypesToSync(workoutExerciseIds: number[], exerciseTypeIds: number[]): Promise<WorkoutExerciseTypeIds[]> {
+  async checkWorkoutExerciseTypesToSync(workoutExerciseIds: string[], exerciseTypeIds: string[]): Promise<WorkoutExerciseTypeIds[]> {
     try {
       const workoutExerciseTypes = await prisma.workout_exercise_type.findMany({
         where: { workout_exercise_id: { in: workoutExerciseIds }, exercise_type_id: { in: exerciseTypeIds } },
@@ -38,8 +38,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return workoutExerciseTypes.map((workoutExerciseType) => ({
-        workout_exercise_id: Number(workoutExerciseType.workout_exercise_id),
-        exercise_type_id: Number(workoutExerciseType.exercise_type_id),
+        workout_exercise_id: String(workoutExerciseType.workout_exercise_id),
+        exercise_type_id: String(workoutExerciseType.exercise_type_id),
         updated_at: workoutExerciseType.updated_at,
       }));
     } catch (error: any) {
@@ -121,7 +121,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkExerciseBodyPartsToSync(exerciseIds: number[], bodyPartIds: number[]): Promise<ExerciseBodyPartIds[]> {
+  async checkExerciseBodyPartsToSync(exerciseIds: string[], bodyPartIds: string[]): Promise<ExerciseBodyPartIds[]> {
     try {
       const exerciseBodyParts = await prisma.exercise_body_part.findMany({
         where: {
@@ -132,8 +132,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return exerciseBodyParts.map((exerciseBodyPart) => ({
-        exercise_id: Number(exerciseBodyPart.exercise_id),
-        body_part_id: Number(exerciseBodyPart.body_part_id),
+        exercise_id: String(exerciseBodyPart.exercise_id),
+        body_part_id: String(exerciseBodyPart.body_part_id),
         updated_at: exerciseBodyPart.updated_at,
       }));
     } catch (error: any) {
@@ -213,7 +213,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkUserSubscriptionsToSync(ids: number[], userIds: string[], subscriptionIds: number[]): Promise<UserSubscriptionIds[]> {
+  async checkUserSubscriptionsToSync(ids: string[], userIds: string[], subscriptionIds: string[]): Promise<UserSubscriptionIds[]> {
     try {
       const userSubscriptions = await prisma.user_subscription.findMany({
         where: {
@@ -225,9 +225,9 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return userSubscriptions.map((userSubscription) => ({
-        id: Number(userSubscription.id),
+        id: String(userSubscription.id),
         user_id: userSubscription.user_id,
-        subscription_id: Number(userSubscription.subscription_id),
+        subscription_id: String(userSubscription.subscription_id),
         updated_at: userSubscription.updated_at,
       }));
     } catch (error: any) {
@@ -311,7 +311,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       throw new RequestError("Failed to sync user subscriptions");
     }
   }
-  async checkTemplateSetTypesToSync(templateSetIds: number[], setTypeIds: number[]): Promise<TemplateSetTypeIds[]> {
+  async checkTemplateSetTypesToSync(templateSetIds: string[], setTypeIds: string[]): Promise<TemplateSetTypeIds[]> {
     try {
       const templateSetTypes = await prisma.template_set_type.findMany({
         where: { template_set_id: { in: templateSetIds }, set_type_id: { in: setTypeIds } },
@@ -319,8 +319,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return templateSetTypes.map((templateSetType) => ({
-        template_set_id: Number(templateSetType.template_set_id),
-        set_type_id: Number(templateSetType.set_type_id),
+        template_set_id: String(templateSetType.template_set_id),
+        set_type_id: String(templateSetType.set_type_id),
         updated_at: templateSetType.updated_at,
       }));
     } catch (error: any) {
@@ -401,7 +401,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkTemplateExerciseTypesToSync(templateExerciseIds: number[], exerciseTypeIds: number[]): Promise<TemplateExerciseTypeIds[]> {
+  async checkTemplateExerciseTypesToSync(templateExerciseIds: string[], exerciseTypeIds: string[]): Promise<TemplateExerciseTypeIds[]> {
     try {
       const templateExerciseTypes = await prisma.template_exercise_type.findMany({
         where: { template_exercise_id: { in: templateExerciseIds }, exercise_type_id: { in: exerciseTypeIds } },
@@ -409,8 +409,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return templateExerciseTypes.map((templateExerciseType) => ({
-        template_exercise_id: Number(templateExerciseType.template_exercise_id),
-        exercise_type_id: Number(templateExerciseType.exercise_type_id),
+        template_exercise_id: String(templateExerciseType.template_exercise_id),
+        exercise_type_id: String(templateExerciseType.exercise_type_id),
         updated_at: templateExerciseType.updated_at,
       }));
     } catch (error: any) {
@@ -501,7 +501,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkSetSetTypesToSync(setIds: number[], setTypeIds: number[]): Promise<SetSetTypeIds[]> {
+  async checkSetSetTypesToSync(setIds: string[], setTypeIds: string[]): Promise<SetSetTypeIds[]> {
     try {
       const setSetTypes = await prisma.set_set_type.findMany({
         where: { set_id: { in: setIds }, set_type_id: { in: setTypeIds } },
@@ -509,8 +509,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return setSetTypes.map((setSetType) => ({
-        set_id: Number(setSetType.set_id),
-        set_type_id: Number(setSetType.set_type_id),
+        set_id: String(setSetType.set_id),
+        set_type_id: String(setSetType.set_type_id),
         updated_at: setSetType.updated_at,
       }));
     } catch (error: any) {
@@ -526,7 +526,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     throw new Error("Method not implemented.");
   }
 
-  async checkSetIntensitiesToSync(setIntensityIds: number[], intensityIds: number[]): Promise<SetIntensityIds[]> {
+  async checkSetIntensitiesToSync(setIntensityIds: string[], intensityIds: string[]): Promise<SetIntensityIds[]> {
     try {
       const setIntensities = await prisma.set_intensity.findMany({
         where: {
@@ -537,8 +537,8 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return setIntensities.map((setIntensity) => ({
-        set_id: Number(setIntensity.set_id),
-        intensity_id: Number(setIntensity.instensity_id),
+        set_id: String(setIntensity.set_id),
+        intensity_id: String(setIntensity.instensity_id),
         updated_at: setIntensity.updated_at,
       }));
     } catch (error: any) {
@@ -612,7 +612,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkSetsToSync(setIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkSetsToSync(setIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const sets = await prisma.set.findMany({
         where: { id: { in: setIds } },
@@ -620,7 +620,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return sets.map((set) => ({
-        id: Number(set.id),
+        id: String(set.id),
         updated_at: set.updated_at,
       }));
     } catch (error: any) {
@@ -699,7 +699,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkWorkoutExercisesToSync(workoutExerciseIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkWorkoutExercisesToSync(workoutExerciseIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const workoutExercises = await prisma.workout_exercise.findMany({
         where: { id: { in: workoutExerciseIds } },
@@ -707,7 +707,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return workoutExercises.map((workoutExercise) => ({
-        id: Number(workoutExercise.id),
+        id: String(workoutExercise.id),
         updated_at: workoutExercise.updated_at,
       }));
     } catch (error: any) {
@@ -782,7 +782,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkWorkoutsToSync(workoutIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkWorkoutsToSync(workoutIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const workouts = await prisma.workout.findMany({
         where: { id: { in: workoutIds } },
@@ -790,7 +790,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return workouts.map((workout) => ({
-        id: Number(workout.id),
+        id: String(workout.id),
         updated_at: workout.updated_at,
       }));
     } catch (error: any) {
@@ -863,7 +863,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkTemplateExercisesToSync(templateExerciseIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkTemplateExercisesToSync(templateExerciseIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const templateExercises = await prisma.template_exercise.findMany({
         where: { id: { in: templateExerciseIds } },
@@ -871,7 +871,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return templateExercises.map((templateExercise) => ({
-        id: Number(templateExercise.id),
+        id: String(templateExercise.id),
         updated_at: templateExercise.updated_at,
       }));
     } catch (error: any) {
@@ -945,7 +945,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       throw new RequestError("Failed to sync template exercises");
     }
   }
-  async checkTemplateSetsToSync(templateSetIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkTemplateSetsToSync(templateSetIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const templateSets = await prisma.template_set.findMany({
         where: { id: { in: templateSetIds } },
@@ -953,7 +953,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return templateSets.map((templateSet) => ({
-        id: Number(templateSet.id),
+        id: String(templateSet.id),
         updated_at: templateSet.updated_at,
       }));
     } catch (error: any) {
@@ -1028,7 +1028,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkWorkoutTemplatesToSync(workoutTemplateIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const workoutTemplates = await prisma.workout_template.findMany({
         where: { id: { in: workoutTemplateIds } },
@@ -1036,7 +1036,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return workoutTemplates.map((workoutTemplate) => ({
-        id: Number(workoutTemplate.id),
+        id: String(workoutTemplate.id),
         updated_at: workoutTemplate.updated_at,
       }));
     } catch (error: any) {
@@ -1196,7 +1196,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
     });
   }
 
-  async checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]> {
+  async checkExercisesToSync(exercisesIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const exercises = await prisma.exercise.findMany({
         where: { id: { in: exercisesIds } },
@@ -1204,7 +1204,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       });
 
       return exercises.map((exercise) => ({
-        id: Number(exercise.id),
+        id: String(exercise.id),
         updated_at: exercise.updated_at,
       }));
     } catch (error: any) {

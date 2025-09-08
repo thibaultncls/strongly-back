@@ -16,15 +16,15 @@ export interface SyncClientData {
 }
 
 export interface ExerciseBodyPart {
-  exercise_id: number;
-  body_part_id: number;
+  exercise_id: string;
+  body_part_id: string;
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
 }
 
 export interface Exercise {
-  id: number;
+  id: string;
   name: string;
   user_id?: string;
   description: string;
@@ -34,8 +34,8 @@ export interface Exercise {
 }
 
 export interface SetIntensity {
-  set_id: number;
-  intensity_id: number;
+  set_id: string;
+  intensity_id: string;
   intensity_level?: number;
   failure: boolean;
   is_deleted: boolean;
@@ -44,9 +44,9 @@ export interface SetIntensity {
 }
 
 export interface Set {
-  id: number;
-  workout_exercise_id: number;
-  template_set_id?: number;
+  id: string;
+  workout_exercise_id: string;
+  template_set_id?: string;
   reps: number;
   weight: number;
   set_number: number;
@@ -57,8 +57,8 @@ export interface Set {
 }
 
 export interface SetSetType {
-  set_id: number;
-  set_type_id: number;
+  set_id: string;
+  set_type_id: string;
   set_group: number;
   is_deleted: boolean;
   created_at: string;
@@ -66,9 +66,9 @@ export interface SetSetType {
 }
 
 export interface TemplateExercise {
-  id: number;
-  template_id: number;
-  exercise_id: number;
+  id: string;
+  template_id: string;
+  exercise_id: string;
   order: number;
   set_up?: string;
   is_deleted: boolean;
@@ -77,8 +77,8 @@ export interface TemplateExercise {
 }
 
 export interface TemplateExerciseType {
-  template_exercise_id: number;
-  exercise_type_id: number;
+  template_exercise_id: string;
+  exercise_type_id: string;
   exercise_group: number;
   is_deleted: boolean;
   created_at: string;
@@ -86,8 +86,8 @@ export interface TemplateExerciseType {
 }
 
 export interface TemplateSet {
-  id: number;
-  template_exercise_id: number;
+  id: string;
+  template_exercise_id: string;
   set_number: number;
   low_reps?: number;
   high_reps?: number;
@@ -97,8 +97,8 @@ export interface TemplateSet {
 }
 
 export interface TemplateSetType {
-  template_set_id: number;
-  set_type_id: number;
+  template_set_id: string;
+  set_type_id: string;
   set_group: number;
   is_deleted: boolean;
   created_at: string;
@@ -106,9 +106,9 @@ export interface TemplateSetType {
 }
 
 export interface UserSubscription {
-  id: number;
+  id: string;
   user_id: string;
-  subscription_id: number;
+  subscription_id: string;
   beginning_date: string;
   end_date: string;
   is_deleted: boolean;
@@ -117,9 +117,9 @@ export interface UserSubscription {
 }
 
 export interface WorkoutExercise {
-  id: number;
-  workout_id: number;
-  exercise_id: number;
+  id: string;
+  workout_id: string;
+  exercise_id: string;
   order: number;
   set_up?: string;
   is_deleted: boolean;
@@ -128,8 +128,8 @@ export interface WorkoutExercise {
 }
 
 export interface WorkoutExerciseType {
-  workout_exercise_id: number;
-  exercise_type_id: number;
+  workout_exercise_id: string;
+  exercise_type_id: string;
   exercise_group: number;
   is_deleted: boolean;
   created_at: string;
@@ -137,8 +137,8 @@ export interface WorkoutExerciseType {
 }
 
 export interface Workout {
-  id: number;
-  workout_template_id: number;
+  id: string;
+  workout_template_id: string;
   duration: number;
   note?: string;
   is_deleted: boolean;
@@ -147,7 +147,7 @@ export interface Workout {
 }
 
 export interface WorkoutTemplate {
-  id: number;
+  id: string;
   user_id: string;
   name: string;
   order: number;

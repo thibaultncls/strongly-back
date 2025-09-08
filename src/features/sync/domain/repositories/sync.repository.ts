@@ -29,106 +29,106 @@ export interface SyncRepository {
   updateUserDeviceId(userId: string, deviceId: string): Promise<void>; // Placeholder for updating user device ID
 
   // Sync methods for exercises
-  checkExercisesToSync(exercisesIds: number[]): Promise<IdAndUpdatedAt[]>; // Placeholder for checking exercises to sync
+  checkExercisesToSync(exercisesIds: string[]): Promise<IdAndUpdatedAt[]>; // Placeholder for checking exercises to sync
   syncExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Exercise[]): Promise<void>;
 
   // Sync methods for exercise body parts
-  checkExerciseBodyPartsToSync(exerciseIds: number[], bodyPartIds: number[]): Promise<ExerciseBodyPartIds[]>;
+  checkExerciseBodyPartsToSync(exerciseIds: string[], bodyPartIds: string[]): Promise<ExerciseBodyPartIds[]>;
   syncExerciseBodyParts(remoteIdAndUpdatedAt: ExerciseBodyPartIds[], data: ExerciseBodyPart[]): Promise<void>;
 
   // Sync methods for workout templates
-  checkWorkoutTemplatesToSync(workoutTemplateIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void>;
 
   // Sync methods for template exercises
-  checkTemplateExercisesToSync(templateExerciseIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkTemplateExercisesToSync(templateExerciseIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncTemplateExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: TemplateExercise[]): Promise<void>;
 
   // Sync methods for template sets
-  checkTemplateSetsToSync(templateSetIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkTemplateSetsToSync(templateSetIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncTemplateSets(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: TemplateSet[]): Promise<void>;
 
   // Sync methods for workouts
-  checkWorkoutsToSync(workoutIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkWorkoutsToSync(workoutIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncWorkouts(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Workout[]): Promise<void>;
 
   // Sync methods for workout exercises
-  checkWorkoutExercisesToSync(workoutExerciseIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkWorkoutExercisesToSync(workoutExerciseIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncWorkoutExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutExercise[]): Promise<void>;
 
   // Sync methods for sets
-  checkSetsToSync(setIds: number[]): Promise<IdAndUpdatedAt[]>;
+  checkSetsToSync(setIds: string[]): Promise<IdAndUpdatedAt[]>;
   syncSets(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Set[]): Promise<void>;
 
   // Sync methods for set intensities
-  checkSetIntensitiesToSync(setIds: number[], intensityIds: number[]): Promise<SetIntensityIds[]>;
+  checkSetIntensitiesToSync(setIds: string[], intensityIds: string[]): Promise<SetIntensityIds[]>;
   syncSetIntensities(remoteIdAndUpdatedAt: SetIntensityIds[], data: SetIntensity[]): Promise<void>;
 
   // Sync methods for set set types
-  checkSetSetTypesToSync(setIds: number[], setTypeIds: number[]): Promise<SetSetTypeIds[]>;
+  checkSetSetTypesToSync(setIds: string[], setTypeIds: string[]): Promise<SetSetTypeIds[]>;
   syncSetSetTypes(remoteIdAndUpdatedAt: SetSetTypeIds[], data: SetSetType[]): Promise<void>;
 
   // Sync methods for template exercise types
-  checkTemplateExerciseTypesToSync(templateExerciseIds: number[], exerciseTypeIds: number[]): Promise<TemplateExerciseTypeIds[]>;
+  checkTemplateExerciseTypesToSync(templateExerciseIds: string[], exerciseTypeIds: string[]): Promise<TemplateExerciseTypeIds[]>;
   syncTemplateExerciseTypes(remoteIdAndUpdatedAt: TemplateExerciseTypeIds[], data: TemplateExerciseType[]): Promise<void>;
 
   // Sync methods for template set types
-  checkTemplateSetTypesToSync(templateSetIds: number[], setTypeIds: number[]): Promise<TemplateSetTypeIds[]>;
+  checkTemplateSetTypesToSync(templateSetIds: string[], setTypeIds: string[]): Promise<TemplateSetTypeIds[]>;
   syncTemplateSetTypes(remoteIdAndUpdatedAt: TemplateSetTypeIds[], data: TemplateSetType[]): Promise<void>;
 
   // Sync methods for user subscriptions
-  checkUserSubscriptionsToSync(ids: number[], userIds: string[], subscriptionIds: number[]): Promise<UserSubscriptionIds[]>;
+  checkUserSubscriptionsToSync(ids: string[], userIds: string[], subscriptionIds: string[]): Promise<UserSubscriptionIds[]>;
   syncUserSubscriptions(remoteIdAndUpdatedAt: UserSubscriptionIds[], data: UserSubscription[]): Promise<void>;
 
   // Sync methods for workout exercise types
-  checkWorkoutExerciseTypesToSync(workoutExerciseIds: number[], exerciseTypeIds: number[]): Promise<WorkoutExerciseTypeIds[]>;
+  checkWorkoutExerciseTypesToSync(workoutExerciseIds: string[], exerciseTypeIds: string[]): Promise<WorkoutExerciseTypeIds[]>;
   syncWorkoutExerciseTypes(remoteIdAndUpdatedAt: WorkoutExerciseTypeIds[], data: WorkoutExerciseType[]): Promise<void>;
 }
 
 export interface IdAndUpdatedAt {
-  id: number;
+  id: string;
   updated_at: Date;
 }
 
 export interface SetIntensityIds {
-  set_id: number;
-  intensity_id: number;
+  set_id: string;
+  intensity_id: string;
   updated_at: Date;
 }
 
 export interface SetSetTypeIds {
-  set_id: number;
-  set_type_id: number;
+  set_id: string;
+  set_type_id: string;
   updated_at: Date;
 }
 
 export interface TemplateExerciseTypeIds {
-  template_exercise_id: number;
-  exercise_type_id: number;
+  template_exercise_id: string;
+  exercise_type_id: string;
   updated_at: Date;
 }
 
 export interface TemplateSetTypeIds {
-  template_set_id: number;
-  set_type_id: number;
+  template_set_id: string;
+  set_type_id: string;
   updated_at: Date;
 }
 
 export interface UserSubscriptionIds {
-  id: number;
+  id: string;
   user_id: string;
-  subscription_id: number;
+  subscription_id: string;
   updated_at: Date;
 }
 
 export interface ExerciseBodyPartIds {
-  exercise_id: number;
-  body_part_id: number;
+  exercise_id: string;
+  body_part_id: string;
   updated_at: Date;
 }
 
 export interface WorkoutExerciseTypeIds {
-  workout_exercise_id: number;
-  exercise_type_id: number;
+  workout_exercise_id: string;
+  exercise_type_id: string;
   updated_at: Date;
 }
