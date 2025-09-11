@@ -28,6 +28,7 @@ import type {
 } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 import { Prisma } from "@prisma/client";
 import { RequestError } from "@shared/errors/RequestError.js";
+import { log } from "node:console";
 
 export class SyncRepositoryPrisma implements SyncRepository {
   async checkWorkoutExerciseTypesToSync(workoutExerciseIds: string[], exerciseTypeIds: string[]): Promise<WorkoutExerciseTypeIds[]> {
@@ -522,8 +523,60 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  syncSetSetTypes(remoteIdAndUpdatedAt: SetSetTypeIds[], data: SetSetType[]): Promise<void> {
-    throw new Error("Method not implemented.");
+  async syncSetSetTypes(remoteIdAndUpdatedAt: SetSetTypeIds[], data: SetSetType[]): Promise<void> {
+    try {
+      const operations = [];
+
+      for (const setSetType of data) {
+        const remoteSetSetType = remoteIdAndUpdatedAt.find(
+          (item) => item.set_id === setSetType.set_id && item.set_type_id === setSetType.set_type_id
+        );
+        const clientUpdatedAt = new Date(setSetType.updated_at);
+
+        if (!remoteSetSetType) {
+          // Create
+          operations.push(
+            prisma.set_set_type.create({
+              data: {
+                set_id: setSetType.set_id,
+                set_type_id: setSetType.set_type_id,
+                set_group: setSetType.set_group,
+                created_at: new Date(setSetType.created_at),
+                updated_at: clientUpdatedAt,
+                is_deleted: setSetType.is_deleted,
+              },
+            })
+          );
+        } else if (remoteSetSetType && clientUpdatedAt > remoteSetSetType.updated_at && !setSetType.is_deleted) {
+          // Update
+          operations.push(
+            prisma.set_set_type.update({
+              where: { set_id_set_type_id: { set_id: setSetType.set_id, set_type_id: setSetType.set_type_id } },
+              data: {
+                set_group: setSetType.set_group,
+                updated_at: clientUpdatedAt,
+                is_deleted: setSetType.is_deleted,
+              },
+            })
+          );
+        } else if (setSetType.is_deleted && remoteSetSetType && clientUpdatedAt > remoteSetSetType.updated_at) {
+          // Soft delete if deletion is more recent
+          operations.push(
+            prisma.set_set_type.update({
+              where: { set_id_set_type_id: { set_id: setSetType.set_id, set_type_id: setSetType.set_type_id } },
+              data: {
+                is_deleted: true,
+                updated_at: clientUpdatedAt,
+              },
+            })
+          );
+        }
+      }
+
+      await prisma.$transaction(operations);
+    } catch (error) {
+      throw new RequestError("Method not implemented.");
+    }
   }
 
   async checkSetIntensitiesToSync(setIntensityIds: string[], intensityIds: string[]): Promise<SetIntensityIds[]> {
@@ -641,6 +694,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const clientUpdatedAt = new Date(set.updated_at);
 
         if (!remoteSet) {
+          console.log("Creating set:", set.id, set.workout_exercise_id);
           // Create
           operations.push(
             prisma.set.create({
@@ -724,6 +778,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       const operations = [];
 
       for (const workoutExercise of data) {
+        console.log("Processing workout exercise:", workoutExercise.id);
         const remoteWorkoutExercise = remoteIdAndUpdatedAt.find((item) => item.id === workoutExercise.id);
         const clientUpdatedAt = new Date(workoutExercise.updated_at);
 
