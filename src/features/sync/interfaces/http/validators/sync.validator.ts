@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { nullable } from "zod";
 
 const ExerciseBodyPartSchema = z.object({
   exercise_id: z.number(),
@@ -11,7 +11,7 @@ const ExerciseBodyPartSchema = z.object({
 const ExerciseSchema = z.object({
   id: z.number(),
   name: z.string(),
-  user_id: z.string().optional(),
+  user_id: z.string().nullable(),
   description: z.string(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -21,7 +21,7 @@ const ExerciseSchema = z.object({
 const SetIntensitySchema = z.object({
   set_id: z.number(),
   intensity_id: z.number(),
-  intensity_level: z.number().optional(),
+  intensity_level: z.number().nullable(),
   failure: z.boolean(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -34,7 +34,7 @@ const SetSchema = z.object({
   reps: z.number(),
   weight: z.number(),
   set_number: z.number(),
-  note: z.string().optional(),
+  note: z.string().nullable(),
   is_deleted: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -54,7 +54,7 @@ const TemplateExerciseSchema = z.object({
   template_id: z.number(),
   exercise_id: z.number(),
   order: z.number(),
-  set_up: z.string().optional(),
+  set_up: z.string().nullable(),
 });
 
 const TemplateExerciseTypeSchema = z.object({
@@ -70,8 +70,8 @@ const TemplateSetSchema = z.object({
   id: z.number(),
   template_exercise_id: z.number(),
   set_number: z.number(),
-  low_reps: z.number().optional(),
-  high_reps: z.number().optional(),
+  low_reps: z.number().nullable(),
+  high_reps: z.number().nullable(),
   is_deleted: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -102,7 +102,7 @@ const WorkoutExerciseSchema = z.object({
   workout_id: z.number(),
   exercise_id: z.number(),
   order: z.number(),
-  set_up: z.string().optional(),
+  set_up: z.string().nullable(),
   is_deleted: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -120,8 +120,8 @@ const WorkoutExerciseTypeSchema = z.object({
 const WorkoutSchema = z.object({
   id: z.number(),
   workout_template_id: z.number(),
-  duration: z.string(),
-  note: z.string().optional(),
+  duration: z.int(),
+  note: z.string().nullable(),
   is_deleted: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
