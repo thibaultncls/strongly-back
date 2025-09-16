@@ -1126,7 +1126,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 is_deleted: workout.is_deleted,
                 created_at: new Date(workout.created_at),
                 updated_at: clientUpdatedAt,
-                reordered_at: workout.reordered_at,
+                reordered_at: clientReorderedAt,
               },
             })
           );
@@ -1145,7 +1145,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 user_id: workout.user_id,
                 is_deleted: false,
                 updated_at: clientUpdatedAt,
-                reordered_at: workout.reordered_at,
+                reordered_at: clientReorderedAt,
               },
             })
           );
