@@ -37,8 +37,8 @@ export interface SyncRepository {
   syncExerciseBodyParts(remoteIdAndUpdatedAt: ExerciseBodyPartIds[], data: ExerciseBodyPart[]): Promise<void>;
 
   // Sync methods for workout templates
-  checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdAndUpdatedAt[]>;
-  syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void>;
+  checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdUpdateAtAndReorderedAt[]>;
+  syncWorkoutTemplates(remoteIdAndUpdatedAt: IdUpdateAtAndReorderedAt[], data: WorkoutTemplate[]): Promise<void>;
 
   // Sync methods for template exercises
   checkTemplateExercisesToSync(templateExerciseIds: string[]): Promise<IdAndUpdatedAt[]>;
@@ -88,6 +88,12 @@ export interface SyncRepository {
 export interface IdAndUpdatedAt {
   id: string;
   updated_at: Date;
+}
+
+export interface IdUpdateAtAndReorderedAt {
+  id: string;
+  updated_at: Date;
+  reordered_at: Date;
 }
 
 export interface SetIntensityIds {
