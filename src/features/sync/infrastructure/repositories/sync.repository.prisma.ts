@@ -584,14 +584,14 @@ export class SyncRepositoryPrisma implements SyncRepository {
       const setIntensities = await prisma.set_intensity.findMany({
         where: {
           set_id: { in: setIntensityIds },
-          instensity_id: { in: intensityIds },
+          intensity_id: { in: intensityIds },
         },
-        select: { set_id: true, instensity_id: true, updated_at: true },
+        select: { set_id: true, intensity_id: true, updated_at: true },
       });
 
       return setIntensities.map((setIntensity) => ({
         set_id: String(setIntensity.set_id),
-        intensity_id: String(setIntensity.instensity_id),
+        intensity_id: String(setIntensity.intensity_id),
         updated_at: setIntensity.updated_at,
       }));
     } catch (error: any) {
@@ -619,7 +619,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.set_intensity.create({
               data: {
                 set_id: setIntensity.set_id,
-                instensity_id: setIntensity.intensity_id,
+                intensity_id: setIntensity.intensity_id,
                 intensity_level: setIntensity.intensity_level,
                 failure: setIntensity.failure,
                 is_deleted: setIntensity.is_deleted,
@@ -632,7 +632,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           // Update
           operations.push(
             prisma.set_intensity.update({
-              where: { set_id_instensity_id: { set_id: setIntensity.set_id, instensity_id: setIntensity.intensity_id } },
+              where: { set_id_intensity_id: { set_id: setIntensity.set_id, intensity_id: setIntensity.intensity_id } },
               data: {
                 intensity_level: setIntensity.intensity_level,
                 failure: setIntensity.failure,
@@ -645,7 +645,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           // Soft delete if deletion is more recent
           operations.push(
             prisma.set_intensity.update({
-              where: { set_id_instensity_id: { set_id: setIntensity.set_id, instensity_id: setIntensity.intensity_id } },
+              where: { set_id_intensity_id: { set_id: setIntensity.set_id, intensity_id: setIntensity.intensity_id } },
               data: {
                 is_deleted: true,
                 updated_at: clientUpdatedAt,
@@ -1123,6 +1123,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 is_deleted: workout.is_deleted,
                 created_at: new Date(workout.created_at),
                 updated_at: clientUpdatedAt,
+                reordered_at: workout.reordered_at,
               },
             })
           );
@@ -1137,6 +1138,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 user_id: workout.user_id,
                 is_deleted: false,
                 updated_at: clientUpdatedAt,
+                reordered_at: workout.reordered_at,
               },
             })
           );

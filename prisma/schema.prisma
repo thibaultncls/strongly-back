@@ -97,13 +97,13 @@ model set_intensity {
   failure         Boolean
   updated_at      DateTime  @default(now()) @db.Timestamptz(6)
   is_deleted      Boolean   @default(false)
-  instensity_id   String    @db.Uuid
+  intensity_id    String    @db.Uuid
   set_id          String    @db.Uuid
-  intensity       intensity @relation(fields: [instensity_id], references: [id])
+  intensity       intensity @relation(fields: [intensity_id], references: [id])
   set             set       @relation(fields: [set_id], references: [id], onDelete: Cascade)
 
-  @@id([set_id, instensity_id])
-  @@index([instensity_id])
+  @@id([set_id, intensity_id])
+  @@index([intensity_id], map: "set_intensity_instensity_id_idx")
   @@index([set_id])
 }
 
@@ -294,6 +294,7 @@ model workout_template {
   order             BigInt?
   is_deleted        Boolean             @default(false)
   id                String              @id @unique(map: "workout_template_client_id_key") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reordered_at      DateTime            @default(now()) @db.Timestamptz(6)
   template_exercise template_exercise[]
   workout           workout[]
   user              user                @relation(fields: [user_id], references: [id], onDelete: Cascade)
