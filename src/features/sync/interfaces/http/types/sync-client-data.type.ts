@@ -154,4 +154,5 @@ export interface WorkoutTemplate {
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
+  reordered_at: string;
 }

@@ -2,6 +2,7 @@ import { prisma } from "@config/prisma.js";
 import type {
   ExerciseBodyPartIds,
   IdAndUpdatedAt,
+  IdUpdateAtAndReorderedAt,
   SetIntensityIds,
   SetSetTypeIds,
   SyncRepository,
@@ -584,14 +585,14 @@ export class SyncRepositoryPrisma implements SyncRepository {
       const setIntensities = await prisma.set_intensity.findMany({
         where: {
           set_id: { in: setIntensityIds },
-          instensity_id: { in: intensityIds },
+          intensity_id: { in: intensityIds },
         },
-        select: { set_id: true, instensity_id: true, updated_at: true },
+        select: { set_id: true, intensity_id: true, updated_at: true },
       });
 
       return setIntensities.map((setIntensity) => ({
         set_id: String(setIntensity.set_id),
-        intensity_id: String(setIntensity.instensity_id),
+        intensity_id: String(setIntensity.intensity_id),
         updated_at: setIntensity.updated_at,
       }));
     } catch (error: any) {
@@ -619,7 +620,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.set_intensity.create({
               data: {
                 set_id: setIntensity.set_id,
-                instensity_id: setIntensity.intensity_id,
+                intensity_id: setIntensity.intensity_id,
                 intensity_level: setIntensity.intensity_level,
                 failure: setIntensity.failure,
                 is_deleted: setIntensity.is_deleted,
@@ -632,7 +633,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           // Update
           operations.push(
             prisma.set_intensity.update({
-              where: { set_id_instensity_id: { set_id: setIntensity.set_id, instensity_id: setIntensity.intensity_id } },
+              where: { set_id_intensity_id: { set_id: setIntensity.set_id, intensity_id: setIntensity.intensity_id } },
               data: {
                 intensity_level: setIntensity.intensity_level,
                 failure: setIntensity.failure,
@@ -645,7 +646,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           // Soft delete if deletion is more recent
           operations.push(
             prisma.set_intensity.update({
-              where: { set_id_instensity_id: { set_id: setIntensity.set_id, instensity_id: setIntensity.intensity_id } },
+              where: { set_id_intensity_id: { set_id: setIntensity.set_id, intensity_id: setIntensity.intensity_id } },
               data: {
                 is_deleted: true,
                 updated_at: clientUpdatedAt,
@@ -1083,16 +1084,17 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdAndUpdatedAt[]> {
+  async checkWorkoutTemplatesToSync(workoutTemplateIds: string[]): Promise<IdUpdateAtAndReorderedAt[]> {
     try {
       const workoutTemplates = await prisma.workout_template.findMany({
         where: { id: { in: workoutTemplateIds } },
-        select: { id: true, updated_at: true },
+        select: { id: true, updated_at: true, reordered_at: true },
       });
 
       return workoutTemplates.map((workoutTemplate) => ({
         id: String(workoutTemplate.id),
         updated_at: workoutTemplate.updated_at,
+        reordered_at: workoutTemplate.reordered_at,
       }));
     } catch (error: any) {
       console.error("Error checking workout templates to sync:", error);
@@ -1103,13 +1105,14 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async syncWorkoutTemplates(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutTemplate[]): Promise<void> {
+  async syncWorkoutTemplates(remoteIdAndUpdatedAt: IdUpdateAtAndReorderedAt[], data: WorkoutTemplate[]): Promise<void> {
     try {
       const operations = [];
 
       for (const workout of data) {
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
+        const clientReorderedAt = new Date(workout.reordered_at);
 
         if (!remoteWorkout) {
           // Créer
@@ -1123,10 +1126,15 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 is_deleted: workout.is_deleted,
                 created_at: new Date(workout.created_at),
                 updated_at: clientUpdatedAt,
+                reordered_at: workout.reordered_at,
               },
             })
           );
-        } else if (remoteWorkout && clientUpdatedAt > remoteWorkout.updated_at && !workout.is_deleted) {
+        } else if (
+          remoteWorkout &&
+          (clientUpdatedAt > remoteWorkout.updated_at || clientReorderedAt > remoteWorkout.reordered_at) &&
+          !workout.is_deleted
+        ) {
           // Mettre à jour
           operations.push(
             prisma.workout_template.update({
@@ -1137,10 +1145,15 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 user_id: workout.user_id,
                 is_deleted: false,
                 updated_at: clientUpdatedAt,
+                reordered_at: workout.reordered_at,
               },
             })
           );
-        } else if (workout.is_deleted && remoteWorkout && clientUpdatedAt > remoteWorkout.updated_at) {
+        } else if (
+          workout.is_deleted &&
+          remoteWorkout &&
+          (clientUpdatedAt > remoteWorkout.updated_at || clientReorderedAt > remoteWorkout.reordered_at)
+        ) {
           // Supprimer (logique) si suppression plus récente
           operations.push(
             prisma.workout_template.update({
