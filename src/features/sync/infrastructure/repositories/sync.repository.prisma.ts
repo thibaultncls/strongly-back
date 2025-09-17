@@ -1113,7 +1113,18 @@ export class SyncRepositoryPrisma implements SyncRepository {
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
         const clientReorderedAt = new Date(workout.reordered_at);
-
+        console.log(
+          "Syncing workout template:",
+          workout.id,
+          "Client Updated At:",
+          clientUpdatedAt,
+          "Client Reordered At:",
+          clientReorderedAt,
+          "Remote updated At:",
+          remoteWorkout?.updated_at,
+          "Remote Reordered At:",
+          remoteWorkout?.reordered_at
+        );
         if (!remoteWorkout) {
           // Créer
           operations.push(
@@ -1135,6 +1146,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
           (clientUpdatedAt > remoteWorkout.updated_at || clientReorderedAt > remoteWorkout.reordered_at) &&
           !workout.is_deleted
         ) {
+          console.log("Updating workout template:", workout.id);
           // Mettre à jour
           operations.push(
             prisma.workout_template.update({
