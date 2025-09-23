@@ -1,15 +1,15 @@
 import z, { nullable } from "zod";
 
 const ExerciseBodyPartSchema = z.object({
-  exercise_id: z.number(),
-  body_part_id: z.number(),
+  exercise_id: z.string(),
+  body_part_id: z.string(),
   is_deleted: z.boolean(),
   created_at: z.string(),
   updated_at: z.string(),
 });
 
 const ExerciseSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   user_id: z.string().nullable(),
   description: z.string(),
@@ -19,8 +19,8 @@ const ExerciseSchema = z.object({
 });
 
 const SetIntensitySchema = z.object({
-  set_id: z.number(),
-  intensity_id: z.number(),
+  set_id: z.string(),
+  intensity_id: z.string(),
   intensity_level: z.number().nullable(),
   failure: z.boolean(),
   is_deleted: z.boolean(),
@@ -29,8 +29,8 @@ const SetIntensitySchema = z.object({
 });
 
 const SetSchema = z.object({
-  id: z.number(),
-  workout_exercise_id: z.number(),
+  id: z.string(),
+  workout_exercise_id: z.string(),
   reps: z.number(),
   weight: z.number(),
   set_number: z.number(),
@@ -41,8 +41,8 @@ const SetSchema = z.object({
 });
 
 const SetSetTypeSchema = z.object({
-  set_id: z.number(),
-  set_type_id: z.number(),
+  set_id: z.string(),
+  set_type_id: z.string(),
   set_group: z.number(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -50,16 +50,16 @@ const SetSetTypeSchema = z.object({
 });
 
 const TemplateExerciseSchema = z.object({
-  id: z.number(),
-  template_id: z.number(),
-  exercise_id: z.number(),
+  id: z.string(),
+  template_id: z.string(),
+  exercise_id: z.string(),
   order: z.number(),
   set_up: z.string().nullable(),
 });
 
 const TemplateExerciseTypeSchema = z.object({
-  template_exercise_id: z.number(),
-  exercise_type_id: z.number(),
+  template_exercise_id: z.string(),
+  exercise_type_id: z.string(),
   exercise_group: z.number(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -67,8 +67,8 @@ const TemplateExerciseTypeSchema = z.object({
 });
 
 const TemplateSetSchema = z.object({
-  id: z.number(),
-  template_exercise_id: z.number(),
+  id: z.string(),
+  template_exercise_id: z.string(),
   set_number: z.number(),
   low_reps: z.number().nullable(),
   high_reps: z.number().nullable(),
@@ -78,8 +78,8 @@ const TemplateSetSchema = z.object({
 });
 
 const TemplateSetTypeSchema = z.object({
-  template_set_id: z.number(),
-  set_type_id: z.number(),
+  template_set_id: z.string(),
+  set_type_id: z.string(),
   set_group: z.number(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -87,20 +87,26 @@ const TemplateSetTypeSchema = z.object({
 });
 
 const UserSubscriptionSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   user_id: z.string(),
-  subscription_id: z.number(),
-  beginning_date: z.string(),
-  end_date: z.string(),
+  entitlement_id: z.string(),
+  latestPurchaseAt: z.string().nullable(),
+  expiration_at: z.string().nullable(),
+  is_deleted: z.boolean(),
   is_active: z.boolean(),
+  will_renew: z.boolean(),
+  product_id: z.string().nullable(),
+  store: z.enum(["app_store", "play_store", "stripe", "unknown"]),
+  period_type: z.enum(["normal", "introductory", "trial", "unknown"]),
+  management_url: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
 });
 
 const WorkoutExerciseSchema = z.object({
-  id: z.number(),
-  workout_id: z.number(),
-  exercise_id: z.number(),
+  id: z.string(),
+  workout_id: z.string(),
+  exercise_id: z.string(),
   order: z.number(),
   set_up: z.string().nullable(),
   is_deleted: z.boolean(),
@@ -109,8 +115,8 @@ const WorkoutExerciseSchema = z.object({
 });
 
 const WorkoutExerciseTypeSchema = z.object({
-  workout_exercise_id: z.number(),
-  exercise_type_id: z.number(),
+  workout_exercise_id: z.string(),
+  exercise_type_id: z.string(),
   exercise_group: z.number(),
   is_deleted: z.boolean(),
   created_at: z.string(),
@@ -118,8 +124,8 @@ const WorkoutExerciseTypeSchema = z.object({
 });
 
 const WorkoutSchema = z.object({
-  id: z.number(),
-  workout_template_id: z.number(),
+  id: z.string(),
+  workout_template_id: z.string(),
   duration: z.int(),
   note: z.string().nullable(),
   is_deleted: z.boolean(),
@@ -128,7 +134,7 @@ const WorkoutSchema = z.object({
 });
 
 const WorkoutTemplateSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   user_id: z.string(),
   name: z.string(),
   order: z.number(),
