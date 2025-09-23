@@ -215,21 +215,21 @@ export class SyncRepositoryPrisma implements SyncRepository {
     }
   }
 
-  async checkUserSubscriptionsToSync(ids: string[], userIds: string[], subscriptionIds: string[]): Promise<UserSubscriptionIds[]> {
+  async checkUserSubscriptionsToSync(ids: string[], userIds: string[], entitlementIds: string[]): Promise<UserSubscriptionIds[]> {
     try {
       const userSubscriptions = await prisma.user_subscription.findMany({
         where: {
           id: { in: ids },
           user_id: { in: userIds },
-          subscription_id: { in: subscriptionIds },
+          entitlement_id: { in: entitlementIds },
         },
-        select: { user_id: true, subscription_id: true, updated_at: true, id: true },
+        select: { user_id: true, entitlement_id: true, updated_at: true, id: true },
       });
 
       return userSubscriptions.map((userSubscription) => ({
         id: String(userSubscription.id),
         user_id: userSubscription.user_id,
-        subscription_id: String(userSubscription.subscription_id),
+        entitlement_id: String(userSubscription.entitlement_id),
         updated_at: userSubscription.updated_at,
       }));
     } catch (error: any) {
@@ -247,7 +247,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
 
       for (const userSubscription of data) {
         const remoteUserSubscription = remoteIdAndUpdatedAt.find(
-          (item) => item.user_id === userSubscription.user_id && item.subscription_id === userSubscription.subscription_id
+          (item) => item.user_id === userSubscription.user_id && item.entitlement_id === userSubscription.entitlement_id
         );
         const clientUpdatedAt = new Date(userSubscription.updated_at);
 
@@ -257,10 +257,14 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.user_subscription.create({
               data: {
                 id: userSubscription.id,
-                beginning_date: new Date(userSubscription.beginning_date),
-                end_date: new Date(userSubscription.end_date),
+                expiration_at: new Date(userSubscription.expiration_at),
+                latest_purchase_at: new Date(userSubscription.latest_purchase_at),
+                product_id: userSubscription.product_id,
+                management_url: userSubscription.management_url,
+                is_active: userSubscription.is_active,
+                will_renew: userSubscription.will_renew,
                 user_id: userSubscription.user_id,
-                subscription_id: userSubscription.subscription_id,
+                entitlement_id: userSubscription.entitlement_id,
                 is_deleted: userSubscription.is_deleted,
                 created_at: new Date(userSubscription.created_at),
                 updated_at: clientUpdatedAt,
@@ -272,31 +276,31 @@ export class SyncRepositoryPrisma implements SyncRepository {
           operations.push(
             prisma.user_subscription.update({
               where: {
-                id: remoteUserSubscription.id, // Assuming id is the primary key
+                id: remoteUserSubscription.id,
               },
               data: {
-                beginning_date: new Date(userSubscription.beginning_date),
-                end_date: new Date(userSubscription.end_date),
+                expiration_at: new Date(userSubscription.expiration_at),
+                latest_purchase_at: new Date(userSubscription.latest_purchase_at),
+                product_id: userSubscription.product_id,
+                management_url: userSubscription.management_url,
+                is_active: userSubscription.is_active,
+                will_renew: userSubscription.will_renew,
                 user_id: userSubscription.user_id,
-                subscription_id: userSubscription.subscription_id,
-                created_at: new Date(userSubscription.created_at),
+                entitlement_id: userSubscription.entitlement_id,
+                is_deleted: userSubscription.is_deleted,
                 updated_at: clientUpdatedAt,
               },
             })
           );
-        } else if (remoteUserSubscription && clientUpdatedAt > remoteUserSubscription.updated_at && !userSubscription.is_deleted) {
-          // Update
+        } else if (remoteUserSubscription && clientUpdatedAt > remoteUserSubscription.updated_at) {
+          // Soft delete
           operations.push(
             prisma.user_subscription.update({
               where: {
-                id: remoteUserSubscription.id, // Assuming id is the primary key
+                id: remoteUserSubscription.id,
               },
               data: {
-                beginning_date: new Date(userSubscription.beginning_date),
-                end_date: new Date(userSubscription.end_date),
-                user_id: userSubscription.user_id,
-                subscription_id: userSubscription.subscription_id,
-                created_at: new Date(userSubscription.created_at),
+                is_deleted: true,
                 updated_at: clientUpdatedAt,
               },
             })

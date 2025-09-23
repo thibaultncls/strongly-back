@@ -108,12 +108,18 @@ export interface TemplateSetType {
 export interface UserSubscription {
   id: string;
   user_id: string;
-  subscription_id: string;
-  beginning_date: string;
-  end_date: string;
+  entitlement_id: string;
+  latest_purchase_at: string;
+  expiration_at: string;
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
+  is_active: boolean;
+  will_renew: boolean;
+  product_id?: string;
+  store: "app_store" | "play_store" | "stripe" | "unknown";
+  period_type: "trial" | "normal" | "unknown";
+  management_url: string;
 }
 
 export interface WorkoutExercise {

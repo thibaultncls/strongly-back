@@ -77,7 +77,7 @@ export interface SyncRepository {
   syncTemplateSetTypes(remoteIdAndUpdatedAt: TemplateSetTypeIds[], data: TemplateSetType[]): Promise<void>;
 
   // Sync methods for user subscriptions
-  checkUserSubscriptionsToSync(ids: string[], userIds: string[], subscriptionIds: string[]): Promise<UserSubscriptionIds[]>;
+  checkUserSubscriptionsToSync(ids: string[], userIds: string[], entitlementIds: string[]): Promise<UserSubscriptionIds[]>;
   syncUserSubscriptions(remoteIdAndUpdatedAt: UserSubscriptionIds[], data: UserSubscription[]): Promise<void>;
 
   // Sync methods for workout exercise types
@@ -123,7 +123,7 @@ export interface TemplateSetTypeIds {
 export interface UserSubscriptionIds {
   id: string;
   user_id: string;
-  subscription_id: string;
+  entitlement_id: string;
   updated_at: Date;
 }
 
