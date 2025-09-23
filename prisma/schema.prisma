@@ -72,7 +72,7 @@ model intensity {
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model set {
   created_at          DateTime         @default(now()) @db.Timestamptz(6)
-  weight              BigInt
+  weight              Float
   reps                BigInt
   set_number          BigInt
   note                String?
