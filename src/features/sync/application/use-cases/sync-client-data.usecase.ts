@@ -152,7 +152,7 @@ export class SyncClientDataUseCase {
       const userSubscriptionIds = data.user_subscription.map((us) => ({
         id: us.id,
         user_id: us.user_id,
-        subscription_id: us.subscription_id,
+        subscription_id: us.entitlement_id,
       }));
 
       const userSubscriptionsToSync = await this.syncRepository.checkUserSubscriptionsToSync(
