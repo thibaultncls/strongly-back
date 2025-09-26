@@ -3,29 +3,10 @@ import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { RequestError } from "@hono/node-server";
 import { container } from "@config/inversify.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
-import type { CheckUserDeviceUseCase } from "@features/sync/application/use-cases/check_user_device.usecase.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import type { SyncClientDataUseCase } from "@features/sync/application/use-cases/sync-client-data.usecase.js";
-
-export async function checkUserDeviceId(c: Context) {
-  const userId = c.get("user").id;
-  const { deviceId } = await c.req.json();
-
-  try {
-    const isValid = await container.get<CheckUserDeviceUseCase>(TYPES.CHECK_USER_DEVICE_USE_CASE).execute(userId, deviceId);
-
-    return c.json({ isValid });
-  } catch (error: any) {
-    if (error instanceof InvalidArgumentsError) {
-      return c.json({ error: error.message }, 400);
-    }
-    if (error instanceof RequestError) {
-      return c.json({ error: error.message }, 500);
-    }
-    console.error("Error checking user device ID:", error);
-    return c.json({ error: "Failed to check user device ID" }, 500);
-  }
-}
+import { SyncSubRevenueCatService } from "@features/sync/infrastructure/services/sync-sub.revenue-cat.service.js";
+import { PremiumRequiredError } from "@shared/errors/premium-required.error.js";
 
 export async function getNonSyncData(c: Context) {
   const userId = c.get("user").id;
@@ -48,10 +29,11 @@ export async function getNonSyncData(c: Context) {
 }
 
 export async function syncClientData(c: Context) {
+  const userId = c.get("user").id;
   const { data } = await c.req.json();
 
   try {
-    await container.get<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).execute(data);
+    await container.get<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).execute(data, userId);
     return c.json({ message: "Data synced successfully" });
   } catch (error: any) {
     console.error("Error syncing client data:", error);
@@ -59,7 +41,20 @@ export async function syncClientData(c: Context) {
       return c.json({ error: error.message }, 500);
     } else if (error instanceof InvalidArgumentsError) {
       return c.json({ error: error.message }, 400);
+    } else if (error instanceof PremiumRequiredError) {
+      return c.json({ error: error.message }, 402);
     }
     return c.json({ error: "Failed to sync client data" }, 500);
+  }
+}
+
+export async function isUserPremium(c: Context) {
+  const userId = c.get("user").id;
+  try {
+    const SyncSub = new SyncSubRevenueCatService();
+    const isPremium = await SyncSub.isUserPremium(userId);
+    return c.json({ isPremium });
+  } catch (error) {
+    return c.json({ error: "Failed to fetch subscription status" }, 500);
   }
 }

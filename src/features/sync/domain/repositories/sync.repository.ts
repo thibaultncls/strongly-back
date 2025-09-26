@@ -83,6 +83,8 @@ export interface SyncRepository {
   // Sync methods for workout exercise types
   checkWorkoutExerciseTypesToSync(workoutExerciseIds: string[], exerciseTypeIds: string[]): Promise<WorkoutExerciseTypeIds[]>;
   syncWorkoutExerciseTypes(remoteIdAndUpdatedAt: WorkoutExerciseTypeIds[], data: WorkoutExerciseType[]): Promise<void>;
+
+  getWorkoutTemplateLength(userId: string): Promise<number>;
 }
 
 export interface IdAndUpdatedAt {
