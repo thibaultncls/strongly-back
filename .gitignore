@@ -36,3 +36,4 @@ strongly/sign-in-with-google.bru
 
 /src/generated/prisma
 /dist
+strongly/sync/is-user-premium.bru

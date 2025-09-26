@@ -32,6 +32,18 @@ import { RequestError } from "@shared/errors/RequestError.js";
 import { log } from "node:console";
 
 export class SyncRepositoryPrisma implements SyncRepository {
+  async getWorkoutTemplateLength(userId: string): Promise<number> {
+    try {
+      const count = await prisma.workout_template.count({
+        where: { user_id: userId },
+      });
+      return count;
+    } catch (error) {
+      console.error("Error getting workout template length:", error);
+      throw new RequestError("Failed to get workout template length");
+    }
+  }
+
   async checkWorkoutExerciseTypesToSync(workoutExerciseIds: string[], exerciseTypeIds: string[]): Promise<WorkoutExerciseTypeIds[]> {
     try {
       const workoutExerciseTypes = await prisma.workout_exercise_type.findMany({
