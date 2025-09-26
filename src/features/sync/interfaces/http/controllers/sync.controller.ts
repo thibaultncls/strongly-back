@@ -6,6 +6,7 @@ import { TYPES } from "@shared/constants/identifier.constant.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import type { SyncClientDataUseCase } from "@features/sync/application/use-cases/sync-client-data.usecase.js";
 import { SyncSubRevenueCatService } from "@features/sync/infrastructure/services/sync-sub.revenue-cat.service.js";
+import { PremiumRequiredError } from "@shared/errors/premium-required.error.js";
 
 export async function getNonSyncData(c: Context) {
   const userId = c.get("user").id;
@@ -40,6 +41,8 @@ export async function syncClientData(c: Context) {
       return c.json({ error: error.message }, 500);
     } else if (error instanceof InvalidArgumentsError) {
       return c.json({ error: error.message }, 400);
+    } else if (error instanceof PremiumRequiredError) {
+      return c.json({ error: error.message }, 402);
     }
     return c.json({ error: "Failed to sync client data" }, 500);
   }

@@ -1,26 +1,28 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
-import type { SyncSubService } from "@features/sync/domain/services/sync-sub.service.js";
+import type { SubscriptionStatus, SyncSubService } from "@features/sync/domain/services/sync-sub.service.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
-import { da } from "zod/locales";
+import { PremiumRequiredError } from "@shared/errors/premium-required.error.js";
 
 export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository, private syncSubService: SyncSubService) {}
 
   async execute(data: SyncClientData, userId: string) {
+    const subscriptionStatus = await this.syncSubService.isUserPremium(userId);
+
     await this.handleUserSubscriptions(data);
     await this.handleExercises(data);
     await this.handleExerciseBodyParts(data);
-    await this.handleWorkoutTemplates(data, userId);
+    await this.handleWorkoutTemplates(data, subscriptionStatus, userId);
     await this.handleTemplateExercises(data);
     await this.handleTemplateSets(data);
     await this.handleWorkouts(data);
     await this.handleWorkoutExercises(data);
     await this.handleSets(data);
     await this.handleSetIntensities(data);
-    await this.handleSetSetTypes(data);
-    await this.handleTemplateExerciseTypes(data);
-    await this.handleTemplateSetTypes(data);
-    await this.handleWorkoutExerciseTypes(data);
+    await this.handleSetSetTypes(data, subscriptionStatus);
+    await this.handleTemplateExerciseTypes(data, subscriptionStatus);
+    await this.handleTemplateSetTypes(data, subscriptionStatus);
+    await this.handleWorkoutExerciseTypes(data, subscriptionStatus);
   }
 
   private async handleExercises(data: SyncClientData) {
@@ -45,9 +47,19 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleWorkoutTemplates(data: SyncClientData, userId: string) {
+  private async handleWorkoutTemplates(data: SyncClientData, subscriptionStatus: SubscriptionStatus, userId: string) {
     if (data.workout_template && data.workout_template.length > 0) {
-      const userSubscriptionStatus = await this.syncSubService.isUserPremium(userId);
+      const currentTemplateCount = await this.syncRepository.getWorkoutTemplateLength(userId);
+
+      if (!subscriptionStatus.isPremium && currentTemplateCount + data.workout_template.length > 3) {
+        for (const template of data.workout_template) {
+          if (subscriptionStatus.lastExpDate && new Date(template.created_at) > subscriptionStatus.lastExpDate) {
+            throw new PremiumRequiredError(
+              "Free users can only create up to 3 workout templates. Please upgrade to premium to create more."
+            );
+          }
+        }
+      }
 
       const workoutTemplateIds = data.workout_template.map((template) => template.id);
       const workoutTemplatesToSync = await this.syncRepository.checkWorkoutTemplatesToSync(workoutTemplateIds);
@@ -109,8 +121,16 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleSetSetTypes(data: SyncClientData) {
+  private async handleSetSetTypes(data: SyncClientData, subscriptionStatus: SubscriptionStatus) {
     if (data.set_set_type && data.set_set_type.length > 0) {
+      if (!subscriptionStatus.isPremium) {
+        for (const sst of data.set_set_type) {
+          if (subscriptionStatus.lastExpDate && new Date(sst.created_at) > subscriptionStatus.lastExpDate) {
+            throw new PremiumRequiredError("Free users can't use custom set types.");
+          }
+        }
+      }
+
       const setSetTypeIds = data.set_set_type.map((sst) => ({
         set_id: sst.set_id,
         set_type_id: sst.set_type_id,
@@ -123,8 +143,16 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleTemplateExerciseTypes(data: SyncClientData) {
+  private async handleTemplateExerciseTypes(data: SyncClientData, subscriptionStatus: SubscriptionStatus) {
     if (data.template_exercise_type && data.template_exercise_type.length > 0) {
+      if (!subscriptionStatus.isPremium) {
+        for (const tet of data.template_exercise_type) {
+          if (subscriptionStatus.lastExpDate && new Date(tet.created_at) > subscriptionStatus.lastExpDate) {
+            throw new PremiumRequiredError("Free users can't use custom exercise types.");
+          }
+        }
+      }
+
       const templateExerciseTypeIds = data.template_exercise_type.map((tet) => ({
         template_exercise_id: tet.template_exercise_id,
         exercise_type_id: tet.exercise_type_id,
@@ -137,8 +165,16 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleTemplateSetTypes(data: SyncClientData) {
+  private async handleTemplateSetTypes(data: SyncClientData, subscriptionStatus: SubscriptionStatus) {
     if (data.template_set_type && data.template_set_type.length > 0) {
+      if (!subscriptionStatus.isPremium) {
+        for (const tst of data.template_set_type) {
+          if (subscriptionStatus.lastExpDate && new Date(tst.created_at) > subscriptionStatus.lastExpDate) {
+            throw new PremiumRequiredError("Free users can't use custom set types.");
+          }
+        }
+      }
+
       const templateSetTypeIds = data.template_set_type.map((tst) => ({
         template_set_id: tst.template_set_id,
         set_type_id: tst.set_type_id,
@@ -168,8 +204,16 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleWorkoutExerciseTypes(data: SyncClientData) {
+  private async handleWorkoutExerciseTypes(data: SyncClientData, subscriptionStatus: SubscriptionStatus) {
     if (data.workout_exercise_type && data.workout_exercise_type.length > 0) {
+      if (!subscriptionStatus.isPremium) {
+        for (const wet of data.workout_exercise_type) {
+          if (subscriptionStatus.lastExpDate && new Date(wet.created_at) > subscriptionStatus.lastExpDate) {
+            throw new PremiumRequiredError("Free users can't use custom exercise types.");
+          }
+        }
+      }
+
       const workoutExerciseTypeIds = data.workout_exercise_type.map((wet) => ({
         workout_exercise_id: wet.workout_exercise_id,
         exercise_type_id: wet.exercise_type_id,
