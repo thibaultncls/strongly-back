@@ -5,6 +5,7 @@ import { container } from "@config/inversify.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import type { SyncClientDataUseCase } from "@features/sync/application/use-cases/sync-client-data.usecase.js";
+import { SyncSubRevenueCatService } from "@features/sync/infrastructure/services/sync-sub.revenue-cat.service.js";
 
 export async function getNonSyncData(c: Context) {
   const userId = c.get("user").id;
@@ -27,10 +28,11 @@ export async function getNonSyncData(c: Context) {
 }
 
 export async function syncClientData(c: Context) {
+  const userId = c.get("user").id;
   const { data } = await c.req.json();
 
   try {
-    await container.get<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).execute(data);
+    await container.get<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).execute(data, userId);
     return c.json({ message: "Data synced successfully" });
   } catch (error: any) {
     console.error("Error syncing client data:", error);
@@ -40,5 +42,16 @@ export async function syncClientData(c: Context) {
       return c.json({ error: error.message }, 400);
     }
     return c.json({ error: "Failed to sync client data" }, 500);
+  }
+}
+
+export async function isUserPremium(c: Context) {
+  const userId = c.get("user").id;
+  try {
+    const SyncSub = new SyncSubRevenueCatService();
+    const isPremium = await SyncSub.isUserPremium(userId);
+    return c.json({ isPremium });
+  } catch (error) {
+    return c.json({ error: "Failed to fetch subscription status" }, 500);
   }
 }

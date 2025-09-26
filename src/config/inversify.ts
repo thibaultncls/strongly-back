@@ -12,7 +12,9 @@ import { AuthServiceSupabase } from "@features/auth/infrastructure/services/auth
 import { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import { SyncClientDataUseCase } from "@features/sync/application/use-cases/sync-client-data.usecase.js";
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import type { SyncSubService } from "@features/sync/domain/services/sync-sub.service.js";
 import { SyncRepositoryPrisma } from "@features/sync/infrastructure/repositories/sync.repository.prisma.js";
+import { SyncSubRevenueCatService } from "@features/sync/infrastructure/services/sync-sub.revenue-cat.service.js";
 import { VerifyTokenUseCase } from "@shared/application/use-case/verify-token.usecase.js";
 import { TYPES } from "@shared/constants/identifier.constant.js";
 import { TokenServiceSupabase } from "@shared/infrastructure/token.service.supabase.js";
@@ -25,6 +27,7 @@ container.bind<AuthService>(TYPES.AUTH_SERVICE).to(AuthServiceSupabase);
 container.bind<AuthRepository>(TYPES.AUTH_REPOSITORY).to(AuthRepositorySupabase);
 container.bind<TokenService>(TYPES.TOKEN_SERVICE).to(TokenServiceSupabase);
 container.bind<SyncRepository>(TYPES.SYNC_REPOSITORY).to(SyncRepositoryPrisma);
+container.bind<SyncSubService>(TYPES.SYNC_SUB_SERVICE).to(SyncSubRevenueCatService);
 
 container.bind<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE).toDynamicValue(() => {
   return new SignInWithAppleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
@@ -59,7 +62,10 @@ container.bind<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).toDynami
 });
 
 container.bind<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).toDynamicValue(() => {
-  return new SyncClientDataUseCase(container.get<SyncRepository>(TYPES.SYNC_REPOSITORY));
+  return new SyncClientDataUseCase(
+    container.get<SyncRepository>(TYPES.SYNC_REPOSITORY),
+    container.get<SyncSubService>(TYPES.SYNC_SUB_SERVICE)
+  );
 });
 
 export { container };

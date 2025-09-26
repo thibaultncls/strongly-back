@@ -1,13 +1,16 @@
 import type { SyncRepository } from "@features/sync/domain/repositories/sync.repository.js";
+import type { SyncSubService } from "@features/sync/domain/services/sync-sub.service.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
+import { da } from "zod/locales";
 
 export class SyncClientDataUseCase {
-  constructor(private syncRepository: SyncRepository) {}
+  constructor(private syncRepository: SyncRepository, private syncSubService: SyncSubService) {}
 
-  async execute(data: SyncClientData) {
+  async execute(data: SyncClientData, userId: string) {
+    await this.handleUserSubscriptions(data);
     await this.handleExercises(data);
     await this.handleExerciseBodyParts(data);
-    await this.handleWorkoutTemplates(data);
+    await this.handleWorkoutTemplates(data, userId);
     await this.handleTemplateExercises(data);
     await this.handleTemplateSets(data);
     await this.handleWorkouts(data);
@@ -17,7 +20,6 @@ export class SyncClientDataUseCase {
     await this.handleSetSetTypes(data);
     await this.handleTemplateExerciseTypes(data);
     await this.handleTemplateSetTypes(data);
-    await this.handleUserSubscriptions(data);
     await this.handleWorkoutExerciseTypes(data);
   }
 
@@ -43,8 +45,10 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleWorkoutTemplates(data: SyncClientData) {
+  private async handleWorkoutTemplates(data: SyncClientData, userId: string) {
     if (data.workout_template && data.workout_template.length > 0) {
+      const userSubscriptionStatus = await this.syncSubService.isUserPremium(userId);
+
       const workoutTemplateIds = data.workout_template.map((template) => template.id);
       const workoutTemplatesToSync = await this.syncRepository.checkWorkoutTemplatesToSync(workoutTemplateIds);
       await this.syncRepository.syncWorkoutTemplates(workoutTemplatesToSync, data.workout_template);
