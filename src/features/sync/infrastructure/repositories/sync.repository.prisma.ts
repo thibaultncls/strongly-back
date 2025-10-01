@@ -68,6 +68,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkoutExerciseTypes(remoteIdAndUpdatedAt: WorkoutExerciseTypeIds[], data: WorkoutExerciseType[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const workoutExerciseType of data) {
         const remoteWorkoutExerciseType = remoteIdAndUpdatedAt.find(
@@ -87,7 +88,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 exercise_group: workoutExerciseType.exercise_group,
                 is_deleted: workoutExerciseType.is_deleted,
                 created_at: new Date(workoutExerciseType.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -104,7 +105,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               data: {
                 exercise_group: workoutExerciseType.exercise_group,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -120,7 +121,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -162,6 +163,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncExerciseBodyParts(remoteIdAndUpdatedAt: ExerciseBodyPartIds[], data: ExerciseBodyPart[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const exerciseBodyPart of data) {
         const remoteExerciseBodyPart = remoteIdAndUpdatedAt.find(
@@ -177,7 +179,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 exercise_id: exerciseBodyPart.exercise_id,
                 body_part_id: exerciseBodyPart.body_part_id,
                 created_at: new Date(exerciseBodyPart.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 is_deleted: exerciseBodyPart.is_deleted,
               },
             })
@@ -193,7 +195,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 },
               },
               data: {
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 is_deleted: false,
               },
             })
@@ -210,7 +212,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -256,6 +258,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncUserSubscriptions(remoteIdAndUpdatedAt: UserSubscriptionIds[], data: UserSubscription[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const userSubscription of data) {
         const remoteUserSubscription = remoteIdAndUpdatedAt.find(
@@ -279,7 +282,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 entitlement_id: userSubscription.entitlement_id,
                 is_deleted: userSubscription.is_deleted,
                 created_at: new Date(userSubscription.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -300,7 +303,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 user_id: userSubscription.user_id,
                 entitlement_id: userSubscription.entitlement_id,
                 is_deleted: userSubscription.is_deleted,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -313,7 +316,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -329,6 +332,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
       throw new RequestError("Failed to sync user subscriptions");
     }
   }
+
   async checkTemplateSetTypesToSync(templateSetIds: string[], setTypeIds: string[]): Promise<TemplateSetTypeIds[]> {
     try {
       const templateSetTypes = await prisma.template_set_type.findMany({
@@ -353,6 +357,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncTemplateSetTypes(remoteIdAndUpdatedAt: TemplateSetTypeIds[], data: TemplateSetType[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const templateSetType of data) {
         const remoteTemplateSetType = remoteIdAndUpdatedAt.find(
@@ -369,7 +374,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 set_group: templateSetType.set_group,
                 is_deleted: templateSetType.is_deleted,
                 created_at: new Date(templateSetType.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -385,7 +390,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 set_group: templateSetType.set_group,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 is_deleted: false,
               },
             })
@@ -402,7 +407,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -443,6 +448,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncTemplateExerciseTypes(remoteIdAndUpdatedAt: TemplateExerciseTypeIds[], data: TemplateExerciseType[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const templateExerciseType of data) {
         const remoteTemplateExerciseType = remoteIdAndUpdatedAt.find(
@@ -461,7 +467,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 exercise_group: templateExerciseType.exercise_group,
                 is_deleted: templateExerciseType.is_deleted,
                 created_at: new Date(templateExerciseType.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -482,7 +488,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               data: {
                 exercise_group: templateExerciseType.exercise_group,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -502,7 +508,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -543,6 +549,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncSetSetTypes(remoteIdAndUpdatedAt: SetSetTypeIds[], data: SetSetType[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const setSetType of data) {
         const remoteSetSetType = remoteIdAndUpdatedAt.find(
@@ -559,7 +566,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 set_type_id: setSetType.set_type_id,
                 set_group: setSetType.set_group,
                 created_at: new Date(setSetType.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 is_deleted: setSetType.is_deleted,
               },
             })
@@ -571,7 +578,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { set_id_set_type_id: { set_id: setSetType.set_id, set_type_id: setSetType.set_type_id } },
               data: {
                 set_group: setSetType.set_group,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 is_deleted: setSetType.is_deleted,
               },
             })
@@ -583,7 +590,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { set_id_set_type_id: { set_id: setSetType.set_id, set_type_id: setSetType.set_type_id } },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -623,6 +630,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncSetIntensities(remoteIdAndUpdatedAt: SetIntensityIds[], data: SetIntensity[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const setIntensity of data) {
         const remoteSetIntensity = remoteIdAndUpdatedAt.find(
@@ -641,7 +649,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 failure: setIntensity.failure,
                 is_deleted: setIntensity.is_deleted,
                 created_at: new Date(setIntensity.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -654,7 +662,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 intensity_level: setIntensity.intensity_level,
                 failure: setIntensity.failure,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -665,7 +673,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { set_id_intensity_id: { set_id: setIntensity.set_id, intensity_id: setIntensity.intensity_id } },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -705,6 +713,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncSets(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Set[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const set of data) {
         const remoteSet = remoteIdAndUpdatedAt.find((item) => item.id === set.id);
@@ -725,7 +734,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 note: set.note,
                 is_deleted: set.is_deleted,
                 created_at: new Date(set.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -742,7 +751,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 set_number: set.set_number,
                 note: set.note,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -753,7 +762,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: set.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -793,6 +802,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkoutExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: WorkoutExercise[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const workoutExercise of data) {
         console.log("Processing workout exercise:", workoutExercise.id);
@@ -811,7 +821,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 set_up: workoutExercise.set_up,
                 is_deleted: workoutExercise.is_deleted,
                 created_at: new Date(workoutExercise.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -826,7 +836,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 order: workoutExercise.order,
                 set_up: workoutExercise.set_up,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -837,7 +847,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: workoutExercise.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -877,6 +887,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkouts(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Workout[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const workout of data) {
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
@@ -893,7 +904,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 duration: workout.duration,
                 is_deleted: workout.is_deleted,
                 created_at: new Date(workout.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -907,7 +918,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 note: workout.note,
                 duration: workout.duration,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -918,7 +929,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: workout.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -958,6 +969,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncTemplateExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: TemplateExercise[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const templateExercise of data) {
         const remoteTemplateExercise = remoteIdAndUpdatedAt.find((item) => item.id === templateExercise.id);
@@ -975,7 +987,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 exercise_id: templateExercise.exercise_id,
                 is_deleted: templateExercise.is_deleted,
                 created_at: new Date(templateExercise.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -990,7 +1002,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 order: templateExercise.order,
                 exercise_id: templateExercise.exercise_id,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1001,7 +1013,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: templateExercise.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1040,6 +1052,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncTemplateSets(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: TemplateSet[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const templateSet of data) {
         const remoteTemplateSet = remoteIdAndUpdatedAt.find((item) => item.id === templateSet.id);
@@ -1057,7 +1070,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 high_rep: templateSet.high_reps,
                 is_deleted: templateSet.is_deleted,
                 created_at: new Date(templateSet.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1072,7 +1085,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 low_rep: templateSet.low_reps,
                 high_rep: templateSet.high_reps,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1083,7 +1096,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: templateSet.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1124,23 +1137,13 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncWorkoutTemplates(remoteIdAndUpdatedAt: IdUpdateAtAndReorderedAt[], data: WorkoutTemplate[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const workout of data) {
         const remoteWorkout = remoteIdAndUpdatedAt.find((item) => item.id === workout.id);
         const clientUpdatedAt = new Date(workout.updated_at);
         const clientReorderedAt = new Date(workout.reordered_at);
-        console.log(
-          "Syncing workout template:",
-          workout.id,
-          "Client Updated At:",
-          clientUpdatedAt,
-          "Client Reordered At:",
-          clientReorderedAt,
-          "Remote updated At:",
-          remoteWorkout?.updated_at,
-          "Remote Reordered At:",
-          remoteWorkout?.reordered_at
-        );
+
         if (!remoteWorkout) {
           // Créer
           operations.push(
@@ -1152,7 +1155,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 order: workout.order,
                 is_deleted: workout.is_deleted,
                 created_at: new Date(workout.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 reordered_at: clientReorderedAt,
               },
             })
@@ -1172,7 +1175,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 order: workout.order,
                 user_id: workout.user_id,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
                 reordered_at: clientReorderedAt,
               },
             })
@@ -1188,7 +1191,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: workout.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1208,6 +1211,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
   async syncExercises(remoteIdAndUpdatedAt: IdAndUpdatedAt[], data: Exercise[]): Promise<void> {
     try {
       const operations = [];
+      const now = new Date();
 
       for (const exercise of data) {
         const remoteExercise = remoteIdAndUpdatedAt.find((item) => item.id === exercise.id);
@@ -1224,7 +1228,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 user_id: exercise.user_id,
                 is_deleted: exercise.is_deleted,
                 created_at: new Date(exercise.created_at),
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1238,7 +1242,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 description: exercise.description,
                 user_id: exercise.user_id,
                 is_deleted: false,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
@@ -1249,7 +1253,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
               where: { id: exercise.id },
               data: {
                 is_deleted: true,
-                updated_at: clientUpdatedAt,
+                updated_at: now,
               },
             })
           );
