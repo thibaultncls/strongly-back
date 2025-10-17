@@ -1,3 +1,8 @@
+import { DeleteAccountUseCase } from "@features/account/application/use-cases/delete-account.usecase.js";
+import type { AccountRepository } from "@features/account/domain/repositories/account.repository.js";
+import type { AccountService } from "@features/account/domain/services/account.service.js";
+import { AccountRepositoryPrisma } from "@features/account/infrastructure/repositories/account.repository.prisma.js";
+import { AccountServiceSupabase } from "@features/account/infrastructure/services/account.service.supabse.js";
 import { GetCurrentUserUseCase } from "@features/auth/application/use-cases/get-current-user.usecase.js";
 import { RefreshTokenUseCase } from "@features/auth/application/use-cases/refresh-token.usecase.js";
 import { SendOtpUseCase } from "@features/auth/application/use-cases/send-otp.usecase.js";
@@ -28,6 +33,8 @@ container.bind<AuthRepository>(TYPES.AUTH_REPOSITORY).to(AuthRepositorySupabase)
 container.bind<TokenService>(TYPES.TOKEN_SERVICE).to(TokenServiceSupabase);
 container.bind<SyncRepository>(TYPES.SYNC_REPOSITORY).to(SyncRepositoryPrisma);
 container.bind<SyncSubService>(TYPES.SYNC_SUB_SERVICE).to(SyncSubRevenueCatService);
+container.bind<AccountService>(TYPES.ACCOUNT_SERVICE).to(AccountServiceSupabase);
+container.bind<AccountRepository>(TYPES.ACCOUNT_REPOSITORY).to(AccountRepositoryPrisma);
 
 container.bind<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE).toDynamicValue(() => {
   return new SignInWithAppleUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
@@ -65,6 +72,13 @@ container.bind<SyncClientDataUseCase>(TYPES.SYNC_CLIENT_DATA_USE_CASE).toDynamic
   return new SyncClientDataUseCase(
     container.get<SyncRepository>(TYPES.SYNC_REPOSITORY),
     container.get<SyncSubService>(TYPES.SYNC_SUB_SERVICE)
+  );
+});
+
+container.bind<DeleteAccountUseCase>(TYPES.DELETE_ACCOUNT_USE_CASE).toDynamicValue(() => {
+  return new DeleteAccountUseCase(
+    container.get<AccountRepository>(TYPES.ACCOUNT_REPOSITORY),
+    container.get<AccountService>(TYPES.ACCOUNT_SERVICE)
   );
 });
 

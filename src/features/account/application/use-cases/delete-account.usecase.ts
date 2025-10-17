@@ -1,7 +1,7 @@
 import type { AccountRepository } from "@features/account/domain/repositories/account.repository.js";
 import type { AccountService } from "@features/account/domain/services/account.service.js";
 
-class DeleteAccountUseCase {
+export class DeleteAccountUseCase {
   constructor(private accountRepository: AccountRepository, private accountService: AccountService) {}
 
   async execute(userId: string): Promise<void> {

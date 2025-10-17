@@ -2,7 +2,7 @@ import { supabase } from "@config/supabase.js";
 import type { AccountService } from "@features/account/domain/services/account.service.js";
 import { RequestError } from "@shared/errors/RequestError.js";
 
-class AccountServiceSupabase implements AccountService {
+export class AccountServiceSupabase implements AccountService {
   async revokeSessions(userId: string): Promise<void> {
     try {
       await supabase.auth.admin.signOut(userId);
