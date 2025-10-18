@@ -1,3 +1,4 @@
+import account from "@features/account/interface/http/routes/account.route.js";
 import auth from "@features/auth/interface/http/routes/auth.route.js";
 import sync from "@features/sync/interfaces/http/routes/sync.route.js";
 import { serve } from "@hono/node-server";
@@ -14,6 +15,7 @@ const app = new Hono<{ Variables: Variables }>();
 
 app.route("/auth", auth);
 app.route("/sync", sync);
+app.route("/account", account);
 
 serve(
   {
