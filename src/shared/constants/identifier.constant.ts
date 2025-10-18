@@ -17,4 +17,7 @@ export const TYPES = {
   GET_NON_SYNC_DATA_USE_CASE: Symbol.for("GetNonSyncDataUseCase"),
   SYNC_CLIENT_DATA_USE_CASE: Symbol.for("SyncClientDataUseCase"),
   SYNC_SUB_SERVICE: Symbol.for("SyncSubService"),
+  ACCOUNT_SERVICE: Symbol.for("AccountService"),
+  ACCOUNT_REPOSITORY: Symbol.for("AccountRepository"),
+  DELETE_ACCOUNT_USE_CASE: Symbol.for("DeleteAccountUseCase"),
 };
