@@ -224,7 +224,7 @@ model user_subscription {
   product_id         String?
   store              subscription_store       @default(unknown)
   period_type        subscription_period_type @default(unknown)
-  management_url     String
+  management_url     String?
   user               user                     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
