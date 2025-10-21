@@ -110,7 +110,7 @@ export interface UserSubscription {
   user_id: string;
   entitlement_id: string;
   latest_purchase_at: string;
-  expiration_at: string;
+  expiration_at?: string;
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
@@ -119,7 +119,7 @@ export interface UserSubscription {
   product_id?: string;
   store: "app_store" | "play_store" | "stripe" | "unknown";
   period_type: "trial" | "normal" | "unknown";
-  management_url: string;
+  management_url?: string;
 }
 
 export interface WorkoutExercise {
