@@ -29,7 +29,6 @@ import type {
 } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 import { Prisma } from "@prisma/client";
 import { RequestError } from "@shared/errors/RequestError.js";
-import { log } from "node:console";
 
 export class SyncRepositoryPrisma implements SyncRepository {
   async getWorkoutTemplateLength(userId: string): Promise<number> {
@@ -272,7 +271,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
             prisma.user_subscription.create({
               data: {
                 id: userSubscription.id,
-                expiration_at: new Date(userSubscription.expiration_at),
+                expiration_at: userSubscription.expiration_at ? new Date(userSubscription.expiration_at) : null,
                 latest_purchase_at: new Date(userSubscription.latest_purchase_at),
                 product_id: userSubscription.product_id,
                 management_url: userSubscription.management_url,
@@ -294,7 +293,7 @@ export class SyncRepositoryPrisma implements SyncRepository {
                 id: remoteUserSubscription.id,
               },
               data: {
-                expiration_at: new Date(userSubscription.expiration_at),
+                expiration_at: userSubscription.expiration_at ? new Date(userSubscription.expiration_at) : null,
                 latest_purchase_at: new Date(userSubscription.latest_purchase_at),
                 product_id: userSubscription.product_id,
                 management_url: userSubscription.management_url,
