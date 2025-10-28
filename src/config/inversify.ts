@@ -57,11 +57,11 @@ container.bind<VerifyTokenUseCase>(TYPES.VERIFY_TOKEN_USE_CASE).toDynamicValue((
 });
 
 container.bind<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE).toDynamicValue(() => {
-  return new RefreshTokenUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
+  return new RefreshTokenUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
 });
 
 container.bind<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE).toDynamicValue(() => {
-  return new GetCurrentUserUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE));
+  return new GetCurrentUserUseCase(container.get<AuthService>(TYPES.AUTH_SERVICE), container.get<AuthRepository>(TYPES.AUTH_REPOSITORY));
 });
 
 container.bind<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).toDynamicValue(() => {
