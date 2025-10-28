@@ -3,6 +3,17 @@ import type { AuthRepository } from "@features/auth/domain/repositories/auth.rep
 import { CreateError } from "@shared/errors/CreateError.js";
 
 export class AuthRepositorySupabase implements AuthRepository {
+  async getUserCreatedAt(uuId: string): Promise<string> {
+    const { data, error } = await supabase.from("user").select("created_at").eq("id", uuId).single();
+
+    if (error) {
+      console.error(`Error fetching user created at: ${error.message}`);
+      throw new Error(`Failed to fetch user created at for UUID ${uuId}: ${error.message}`);
+    }
+
+    return data.created_at;
+  }
+
   async createUser(uuId: string, email?: string): Promise<void> {
     const { error } = await supabase.from("user").insert({
       id: uuId,

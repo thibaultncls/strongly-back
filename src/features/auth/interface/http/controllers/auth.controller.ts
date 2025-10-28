@@ -19,13 +19,10 @@ import type { Context } from "hono";
 
 export async function signInWithApple(c: Context) {
   const { token } = await c.req.json();
-  console.log("Received token:", token);
 
   try {
     const userCase = container.get<SignInWithAppleUseCase>(TYPES.SIGN_IN_WITH_APPLE_USE_CASE);
     const authToken = await userCase.execute({ token });
-
-    console.log("Auth token:", authToken);
 
     return c.json({
       accessToken: authToken.accessToken,
@@ -49,20 +46,12 @@ export async function signInWithApple(c: Context) {
 
 export async function signInWithGoogle(c: Context) {
   const { token } = await c.req.json();
-  console.log("Received token:", token);
 
   try {
     const userCase = container.get<SignInWithGoogleUseCase>(TYPES.SIGN_IN_WITH_GOOGLE_USE_CASE);
-    const authToken = await userCase.execute({ token });
+    const authUser = await userCase.execute({ token });
 
-    console.log("Auth token:", authToken);
-
-    return c.json({
-      accessToken: authToken.accessToken,
-      refreshToken: authToken.refreshToken,
-      userId: authToken.userId,
-      email: authToken.email,
-    });
+    return c.json(authUser);
   } catch (error: any) {
     console.error("Error during sign-in with Google:", error);
     if (error instanceof SignInWithGoogleError) {
@@ -79,7 +68,6 @@ export async function signInWithGoogle(c: Context) {
 
 export async function sendOtp(c: Context) {
   const { email } = await c.req.json();
-  console.log("Received email for OTP:", email);
 
   try {
     const sendOtpUseCase = container.get<SendOtpUseCase>(TYPES.SEND_OTP_USE_CASE);
@@ -99,19 +87,12 @@ export async function sendOtp(c: Context) {
 
 export async function verifyOtp(c: Context) {
   const { email, otp } = await c.req.json();
-  console.log("Received email and OTP for verification:", email, otp);
 
   try {
     const verifyOtpUseCase = container.get<VerifyOtpUseCase>(TYPES.VERIFY_OTP_USE_CASE);
-    const authToken = await verifyOtpUseCase.execute({ email, otp });
+    const authUser = await verifyOtpUseCase.execute({ email, otp });
 
-    console.log("Auth token after OTP verification:", authToken);
-    return c.json({
-      accessToken: authToken.accessToken,
-      refreshToken: authToken.refreshToken,
-      userId: authToken.userId,
-      email: authToken.email,
-    });
+    return c.json(authUser);
   } catch (error: any) {
     console.error("Error verifying OTP:", error);
     if (error instanceof SignInWithOtpError) {
@@ -131,14 +112,9 @@ export async function refreshToken(c: Context) {
 
   try {
     const useCase = container.get<RefreshTokenUseCase>(TYPES.REFRESH_TOKEN_USE_CASE);
-    const authToken = await useCase.execute({ refreshToken });
+    const authUser = await useCase.execute({ refreshToken });
 
-    return c.json({
-      accessToken: authToken.accessToken,
-      refreshToken: authToken.refreshToken,
-      userId: authToken.userId,
-      email: authToken.email,
-    });
+    return c.json(authUser);
   } catch (error: any) {
     console.error("Error refreshing token:", error);
     if (error instanceof InvalidArgumentsError) {
@@ -159,12 +135,7 @@ export async function getCurrentUser(c: Context) {
     const useCase = container.get<GetCurrentUserUseCase>(TYPES.GET_CURRENT_USER_USE_CASE);
     const user = await useCase.execute(token, refreshToken);
 
-    return c.json({
-      accessToken: user.accessToken,
-      refreshToken: user.refreshToken,
-      userId: user.userId,
-      email: user.email,
-    });
+    return c.json(user);
   } catch (error) {
     if (error instanceof TokenError) {
       console.error("Token error:", error);

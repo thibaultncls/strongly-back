@@ -1,13 +1,13 @@
 import { supabase } from "@config/supabase.js";
-import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
 import type { AuthService, AuthToken } from "@features/auth/domain/services/auth.service.js";
-import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
-import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
-import { OtpError } from "../errors/otp.error.js";
 import type { Email } from "@features/auth/domain/value-object/email.vo.js";
 import type { OTP } from "@features/auth/domain/value-object/otp.vo.js";
-import { RefreshTokenError } from "../errors/refresh-token.error.js";
 import { TokenError } from "@shared/errors/TokenError.js";
+import { OtpError } from "../errors/otp.error.js";
+import { RefreshTokenError } from "../errors/refresh-token.error.js";
+import { SignInWithAppleError } from "../errors/sign-in-with-apple.error.js";
+import { SignInWithGoogleError } from "../errors/sign-in-with-google.error.js";
+import { SignInWithOtpError } from "../errors/sign-in-with-otp.error.js";
 
 export class AuthServiceSupabase implements AuthService {
   async getCurrentUser(token: string, refreshToken: string): Promise<AuthToken> {
@@ -15,6 +15,8 @@ export class AuthServiceSupabase implements AuthService {
 
     if (error) {
       if (error.code === "bad_jwt") {
+        console.error("JWT token is invalid", error);
+
         return await this.refreshToken(refreshToken);
       }
       throw TokenError.tokenVerificationFailed();
