@@ -2,6 +2,7 @@ import type { SyncRepository } from "@features/sync/domain/repositories/sync.rep
 import type { SubscriptionStatus, SyncSubService } from "@features/sync/domain/services/sync-sub.service.js";
 import type { SyncClientData } from "@features/sync/interfaces/http/types/sync-client-data.type.js";
 import { PremiumRequiredError } from "@shared/errors/premium-required.error.js";
+import { RequestError } from "@shared/errors/RequestError.js";
 
 export class SyncClientDataUseCase {
   constructor(private syncRepository: SyncRepository, private syncSubService: SyncSubService) {}
@@ -9,8 +10,8 @@ export class SyncClientDataUseCase {
   async execute(data: SyncClientData, userId: string) {
     const subscriptionStatus = await this.syncSubService.isUserPremium(userId);
 
-    await this.handleUserSubscriptions(data);
-    await this.handleExercises(data);
+    await this.handleUserSubscriptions(data, userId);
+    await this.handleExercises(data, userId);
     await this.handleExerciseBodyParts(data);
     await this.handleWorkoutTemplates(data, subscriptionStatus, userId);
     await this.handleTemplateExercises(data);
@@ -25,8 +26,11 @@ export class SyncClientDataUseCase {
     await this.handleWorkoutExerciseTypes(data, subscriptionStatus);
   }
 
-  private async handleExercises(data: SyncClientData) {
+  private async handleExercises(data: SyncClientData, userId: string) {
     if (data.exercise && data.exercise.length > 0) {
+      if (data.exercise.some((exercise) => exercise.user_id !== userId)) {
+        throw new RequestError("User can only sync their own exercises.");
+      }
       const exercisesId = data.exercise.map((exercise) => exercise.id);
       const exercisesToSync = await this.syncRepository.checkExercisesToSync(exercisesId);
       await this.syncRepository.syncExercises(exercisesToSync, data.exercise);
@@ -49,6 +53,9 @@ export class SyncClientDataUseCase {
 
   private async handleWorkoutTemplates(data: SyncClientData, subscriptionStatus: SubscriptionStatus, userId: string) {
     if (data.workout_template && data.workout_template.length > 0) {
+      if (data.workout_template.some((wt) => wt.user_id !== userId)) {
+        throw new RequestError("User can only sync their own workout templates.");
+      }
       const currentTemplateCount = await this.syncRepository.getWorkoutTemplateLength(userId);
 
       if (!subscriptionStatus.isPremium && currentTemplateCount + data.workout_template.length > 3) {
@@ -187,8 +194,12 @@ export class SyncClientDataUseCase {
     }
   }
 
-  private async handleUserSubscriptions(data: SyncClientData) {
+  private async handleUserSubscriptions(data: SyncClientData, userId: string) {
     if (data.user_subscription && data.user_subscription.length > 0) {
+      if (data.user_subscription.some((us) => us.user_id !== userId)) {
+        throw new RequestError("User can only sync their own subscriptions.");
+      }
+
       const userSubscriptionIds = data.user_subscription.map((us) => ({
         id: us.id,
         user_id: us.user_id,
