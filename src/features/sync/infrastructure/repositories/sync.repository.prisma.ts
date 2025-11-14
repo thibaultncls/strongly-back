@@ -1288,13 +1288,6 @@ export class SyncRepositoryPrisma implements SyncRepository {
     return nonSyncData[0]?.get_user_data || null;
   }
 
-  async updateUserDeviceId(userId: string, deviceId: string): Promise<void> {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { device_id: deviceId },
-    });
-  }
-
   async checkExercisesToSync(exercisesIds: string[]): Promise<IdAndUpdatedAt[]> {
     try {
       const exercises = await prisma.exercise.findMany({
