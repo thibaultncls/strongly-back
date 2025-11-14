@@ -26,7 +26,6 @@ export interface SyncRepository {
    */
   checkUserDeviceId(userId: string, deviceId: string): Promise<boolean>;
   getNonSyncData(userId: string, lastSync: string): Promise<any>; // Placeholder for non-sync data method
-  updateUserDeviceId(userId: string, deviceId: string): Promise<void>; // Placeholder for updating user device ID
 
   // Sync methods for exercises
   checkExercisesToSync(exercisesIds: string[]): Promise<IdAndUpdatedAt[]>; // Placeholder for checking exercises to sync
