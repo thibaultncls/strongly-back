@@ -1,21 +1,21 @@
-import type { Context } from "hono";
-import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
-import { RequestError } from "@hono/node-server";
 import { container } from "@config/inversify.js";
-import { TYPES } from "@shared/constants/identifier.constant.js";
 import type { GetNonSyncDataUseCase } from "@features/sync/application/use-cases/get-non-sync-data.usecase.js";
 import type { SyncClientDataUseCase } from "@features/sync/application/use-cases/sync-client-data.usecase.js";
 import { SyncSubRevenueCatService } from "@features/sync/infrastructure/services/sync-sub.revenue-cat.service.js";
+import { RequestError } from "@hono/node-server";
+import { TYPES } from "@shared/constants/identifier.constant.js";
+import { InvalidArgumentsError } from "@shared/errors/InvalidArgumentsError.js";
 import { PremiumRequiredError } from "@shared/errors/premium-required.error.js";
+import type { Context } from "hono";
 
 export async function getNonSyncData(c: Context) {
   const userId = c.get("user").id;
-  const { lastSync, deviceId } = await c.req.json();
+  const { lastSync } = await c.req.json();
 
   try {
-    console.log("Fetching non-sync data for user:", userId, "lastSync:", lastSync, "deviceId:", deviceId);
+    console.log("Fetching non-sync data for user:", userId, "lastSync:", lastSync);
 
-    const nonSyncData = await container.get<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).execute(userId, lastSync, deviceId);
+    const nonSyncData = await container.get<GetNonSyncDataUseCase>(TYPES.GET_NON_SYNC_DATA_USE_CASE).execute(userId, lastSync);
     return c.json({ nonSyncData });
   } catch (error: any) {
     console.error("Error fetching non-sync data:", error);
